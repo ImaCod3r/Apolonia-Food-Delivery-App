@@ -5,6 +5,7 @@ import { CartButton } from "@/components/cartButton";
 import { SearchBar } from "@/components/searchBar";
 import { Categories } from "@/components/categories";
 import { Menu } from "@/components/menu";
+import { router } from "expo-router";
 
 export default function Index() {
     return (
@@ -15,7 +16,7 @@ export default function Index() {
                 <View style={styles.headerActions}>
                     <CartButton />
                     
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={() => router.navigate('/profile')}>
                         <Image source={{ uri: "https://github.com/imaCod3r.png" }} style={styles.profile} /> 
                     </TouchableOpacity>
                 </View>
