@@ -8,6 +8,8 @@ export default function Profile() {
         <ScrollView style={styles.container}>
 
             <ProfilePicture />
+
+            <Text style={styles.userName}>Edson Rodrigues</Text>
         </ScrollView>
     )
 }
