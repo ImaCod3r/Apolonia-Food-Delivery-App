@@ -10,5 +10,9 @@ export const styles = StyleSheet.create({
         fontWeight: 'bold',
         alignSelf: 'center',
         marginTop: 15
+    },
+    menuOptions: {
+        margin: 20,
+        gap: 10
     }
 })

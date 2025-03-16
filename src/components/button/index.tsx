@@ -6,7 +6,7 @@ import { COLORS } from "@/styles/colors";
 type Props = {
     isGoogle?: boolean
     text: string
-    isPrimary: boolean,
+    isPrimary?: boolean,
     onClick: () => void
 }
 
