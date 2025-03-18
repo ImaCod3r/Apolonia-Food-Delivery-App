@@ -1,4 +1,4 @@
-import { View, Image, Text, ScrollView } from "react-native";
+import { View, Text, ScrollView } from "react-native";
 import { styles } from "./styles";
 
 import { ProfilePicture } from "@/components/profilePic";
@@ -15,7 +15,7 @@ export default function Profile() {
             <Text style={styles.userName}>Edson Rodrigues</Text>
 
             <View style={styles.menuOptions}>
-                <Option label="Detalhes pessoais" route="cart" />
+                <Option label="Detalhes pessoais" route="editProfile" />
                 <Option label="Histórico de pedidos" route="history" />
                 <Option label="Termos de Serviço" route="terms" />
 

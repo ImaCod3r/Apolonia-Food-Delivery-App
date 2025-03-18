@@ -7,4 +7,4 @@ export function Input({...rest}: TextInputProps) {
             <TextInput style={styles.input}  {...rest} />
         </View>
     )
-}
+}   
