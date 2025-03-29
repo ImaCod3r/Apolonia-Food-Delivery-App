@@ -3,10 +3,14 @@ import { COLORS } from "@/styles/colors";
 
 export const styles = StyleSheet.create({
     container: {
-        marginHorizontal: 20,
+        flex: 1,
+        gap: 20
     },
-    items: {
+    categories: {
         gap: 10
+    },
+    menu: {
+        gap: 10,
     },
     modalContainer: {
         backgroundColor: COLORS.white,

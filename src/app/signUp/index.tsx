@@ -9,38 +9,10 @@ import { Back } from "@/components/back";
 import { Input } from "@/components/input";
 import { Button } from "@/components/button";
 
-// AppState.addEventListener("change", (state) => {
-//     if (state === "active") {
-//         supabase.auth.startAutoRefresh();
-//     } else {
-//         supabase.auth.stopAutoRefresh();
-//     }
-// })
-
 export default function SignUp() {
-    // const [name, setName] = useState('');
-    // const [surname, setSurname] = useState('');
     const [loading, setLoading] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-
-    // async function signUpWithEmail() {
-    //     setLoading(true);
-
-    //     if(!isValidEmail(email)) Alert.alert("Insira um email valido!");
-
-    //     const {
-    //         data: { session },
-    //         error,
-    //     } = await supabase.auth.signUp({
-    //         email: email,
-    //         password: password
-    //     })
-
-    //     if(error) Alert.alert(error.message);
-    //     if(!session) Alert.alert('Verifique sua caixa de entrada para validar o seu email');
-    //     setLoading(false);
-    // }
 
     return (
         <ScrollView style={styles.container}>
@@ -52,10 +24,10 @@ export default function SignUp() {
             <View style={styles.form}>
 
                 <Text style={styles.label}>Nome</Text>
-                <Input placeholder="Nome" />
+                <Input placeholder="Ex: João" />
 
                 <Text style={styles.label}>Sobrenome</Text>
-                <Input placeholder="Sobrenome" />
+                <Input placeholder="Ex: Da Silva" />
 
                 <Text style={styles.label}>Email</Text>
                 <Input 
@@ -67,7 +39,7 @@ export default function SignUp() {
 
                 <Text style={styles.label}>Senha</Text>
                 <Input 
-                placeholder="Senha" 
+                placeholder="Senha segura" 
                 secureTextEntry={true}
                 onChangeText={setPassword}
                 value={password}

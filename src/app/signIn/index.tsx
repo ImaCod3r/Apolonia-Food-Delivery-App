@@ -15,8 +15,8 @@ export default function SignIn() {
             </View>
 
             <View style={styles.form}>
-                <Text style={styles.label}>Email/Telefone</Text>
-                <Input placeholder="Email ou telefone" />
+                <Text style={styles.label}>Email</Text>
+                <Input placeholder="Seu melhor email" />
 
                 <Text style={styles.label}>Senha</Text>
                 <Input placeholder="Senha" secureTextEntry={true} />

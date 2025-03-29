@@ -3,7 +3,7 @@ import { styles } from "./styles";
 
 import { CartButton } from "@/components/cartButton";
 import { SearchBar } from "@/components/searchBar";
-import { Categories } from "@/components/categories";
+
 import { Menu } from "@/components/menu";
 import { router } from "expo-router";
 
@@ -24,8 +24,6 @@ export default function Index() {
             </View>
             
             <SearchBar icon="search" />
-
-            <Categories />
 
             <Menu />
         </View>
