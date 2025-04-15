@@ -1,4 +1,5 @@
-import { View, Text, ScrollView, TouchableOpacity } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, Alert } from "react-native";
+import { useState } from "react";
 import { router } from "expo-router";
 import { styles } from "./styles";
 
@@ -6,7 +7,21 @@ import { Input } from "@/components/input";
 import { Button } from "@/components/button";
 import { Back } from "@/components/back";
 
+import { signInWithEmail } from "@/utils/auth";
+
 export default function SignIn() {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+
+    const handleLogin = async () => {
+        const result = await signInWithEmail(email, password);
+
+        if(result) {
+            Alert.alert('Login realizado com sucesso', 'Você está logado!')
+            router.push('/index');
+        }
+    }
+
     return (
         <ScrollView style={styles.container}>
             <View style={styles.header}>
@@ -16,14 +31,12 @@ export default function SignIn() {
 
             <View style={styles.form}>
                 <Text style={styles.label}>Email</Text>
-                <Input placeholder="Seu melhor email" />
+                <Input placeholder="Seu melhor email" onChangeText={setEmail} />
 
                 <Text style={styles.label}>Senha</Text>
-                <Input placeholder="Senha" secureTextEntry={true} />
+                <Input placeholder="Senha" secureTextEntry={true} onChangeText={setPassword} />
 
-                <Button text="Iniciar sessão" isPrimary onClick={() => {
-                    console.log("Logar")
-                }} />
+                <Button text="Iniciar sessão" isPrimary onClick={() => handleLogin()} />
 
                 <Text style={{ alignSelf: "center" }}>Ou</Text>
 

@@ -2,17 +2,27 @@ import { View, ScrollView, Text, TouchableOpacity, AppState, Alert } from "react
 import { router } from "expo-router";
 import { styles } from "./styles";
 import { useState } from "react";
-import { supabase } from "@/lib/initSupabase";
-import { isValidEmail } from "@/utils/validators";
+import { signUpWithProfile } from "@/utils/auth";
 
 import { Back } from "@/components/back";
 import { Input } from "@/components/input";
 import { Button } from "@/components/button";
 
 export default function SignUp() {
-    const [loading, setLoading] = useState(false);
+    const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
+    const handleSignUp = async () => {
+        try {
+            console.log({ name, email, password });
+            await signUpWithProfile(email, password, name);
+            Alert.alert('Conta criada', 'Verifique seu e-mail para confirmar o cadastro.');
+            router.push('/signIn');
+        } catch (error: any) {
+            Alert.alert('Erro', error.message)
+        }
+    }
 
     return (
         <ScrollView style={styles.container}>
@@ -23,33 +33,42 @@ export default function SignUp() {
 
             <View style={styles.form}>
 
-                <Text style={styles.label}>Nome</Text>
-                <Input placeholder="Ex: João" />
-
-                <Text style={styles.label}>Sobrenome</Text>
-                <Input placeholder="Ex: Da Silva" />
+                <Text style={styles.label}>Nome completo</Text>
+                <Input
+                    placeholder="Ex: Gracinda Lopes"
+                    onChangeText={setName}
+                />
 
                 <Text style={styles.label}>Email</Text>
-                <Input 
-                placeholder="seuemail@provedor.com"
-                autoComplete="email"
-                onChangeText={setEmail}
-                value={email}
+                <Input
+                    placeholder="seuemail@provedor.com"
+                    autoComplete="email"
+                    onChangeText={(text) => setEmail(text)}
+                    value={email}
                 />
 
                 <Text style={styles.label}>Senha</Text>
-                <Input 
-                placeholder="Senha segura" 
-                secureTextEntry={true}
-                onChangeText={setPassword}
-                value={password}
+                <Input
+                    placeholder="Senha segura"
+                    secureTextEntry={true}
+                    onChangeText={(text) => setPassword(text)}
+                    value={password}
                 />
 
-                <Button text="Criar conta" isPrimary onClick={() => console.log("Criar conta")}/>
+                <Button
+                    text="Criar conta"
+                    isPrimary
+                    onClick={() => handleSignUp()}
+                />
 
-                <Text style={{ alignSelf: "center" }}>Ou</Text>
+                <Text
+                    style={{ alignSelf: "center" }}>Ou</Text>
 
-                <Button text="Continuar com Google" isPrimary={false} onClick={() => 0} isGoogle />
+                <Button
+                    text="Continuar com Google"
+                    isPrimary={false}
+                    onClick={() => 0} isGoogle
+                />
 
                 <View style={styles.linkLine}>
                     <Text>

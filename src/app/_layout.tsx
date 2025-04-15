@@ -5,7 +5,7 @@ import { Slot, Redirect } from "expo-router";
 import { COLORS } from "@/styles/colors";
 
 export default function Layout() {
-    const isNew = false;
+    const isNew = true;
     return ( 
             <>
                 <StatusBar barStyle="light-content" backgroundColor={COLORS.primary}  />
