@@ -17,7 +17,7 @@ export default function SignUp() {
         try {
             console.log({ name, email, password });
             await signUpWithProfile(email, password, name);
-            Alert.alert('Conta criada', 'Verifique seu e-mail para confirmar o cadastro.');
+            Alert.alert('Conta criada', 'Faça login para começar a experiência.');
             router.push('/signIn');
         } catch (error: any) {
             Alert.alert('Erro', error.message)

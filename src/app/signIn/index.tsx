@@ -14,12 +14,18 @@ export default function SignIn() {
     const [password, setPassword] = useState('');
 
     const handleLogin = async () => {
-        const result = await signInWithEmail(email, password);
-
-        if(result) {
-            Alert.alert('Login realizado com sucesso', 'Você está logado!')
-            router.push('/index');
+        try {
+            const result = await signInWithEmail(email, password);
+            if(result) {
+                Alert.alert('Login realizado com sucesso', 'Você está logado!')
+                router.replace('/' as any);
+            }
+        } catch(error) {
+            if(error instanceof Error) {
+                Alert.alert('Erro', error.message)
+            }
         }
+
     }
 
     return (

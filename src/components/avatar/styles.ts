@@ -18,7 +18,7 @@ export const styles = StyleSheet.create({
         borderTopColor: COLORS.gray,
         position: 'absolute',
         bottom: 0,
-        padding: 10,
+        padding: 20,
         width: '100%',
         justifyContent: 'center',
         backgroundColor: COLORS.white

@@ -6,7 +6,9 @@ import { Button } from "@/components/button";
 import { Input } from "@/components/input";
 import { Back } from "@/components/back";
 
+
 export default function EditProfile(){
+ 
     return(
         <View style={styles.container}>
             <Back />
