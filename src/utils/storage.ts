@@ -17,11 +17,11 @@ async function uploadImage(uri: string) {
     }
 
     return data;
-   
+
   } catch (error) {
     console.log('Error uploading image:', error);
     throw error;
-  } 
+  }
 }
 
 async function getImageUrl(path: string) {
@@ -37,7 +37,7 @@ async function getImageUrl(path: string) {
     const publicURL = data.publicUrl;
 
     return publicURL;
-    
+
   } catch (error) {
     console.log('Error getting image URL:', error);
     throw error;
@@ -55,7 +55,7 @@ async function deleteImage(path: string) {
     }
 
     return true;
-    
+
   } catch (error) {
     console.log('Error deleting image:', error);
     throw error;

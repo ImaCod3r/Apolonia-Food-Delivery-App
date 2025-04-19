@@ -26,6 +26,7 @@ export function Avatar({ currentUser }: Props) {
         if(result.canceled || !result.assets.length) {
             return;
         }
+
         if(currentUser.avatar_url) {
             const path = currentUser.avatar_url.split('/').pop();
             await deleteImage(path as string);
@@ -40,11 +41,8 @@ export function Avatar({ currentUser }: Props) {
 
     return (
         <View>
-            <TouchableOpacity style={styles.container} onPress={
-                () => {
-                    setModalActive(true);
-                }
-            }>
+            <TouchableOpacity style={styles.container} 
+                onPress={() => setModalActive(true)}>
                 <Image source={{ uri: currentUser?.avatar_url || 'https://github.com/imaCod3r.png' }} style={styles.image} />
             </TouchableOpacity>
 

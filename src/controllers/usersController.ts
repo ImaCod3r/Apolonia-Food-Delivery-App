@@ -12,18 +12,17 @@ export class UsersController {
         return data;
     }
 
-    static async createUser(name: string, email: string, password: string) {
-        const { data, error } = await supabase
-            .from('profiles')
-            .insert([{
-                name: name,
-                email: email,
-                password: password,
-                avatar_url: null,
-                isadmin: false,
-            }]);
+    static async createUser(id: any, name: string, email: string, password: string) {
+        const { error: insertError } = await supabase
+        .from('profiles').insert([{
+            id: id,
+            name: name,
+            email: email,
+            avatar_url: null,
+            isadmin: false,
+        }]);
 
-        if (error) throw error;
+        if (insertError) throw insertError;
     }
 
     static async updateUser(id: string, name?: string, email?: string, password?: string, avatar_url?: string, isadmin?: boolean) {

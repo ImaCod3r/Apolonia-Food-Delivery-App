@@ -1,4 +1,5 @@
 import { supabase } from "./supabase";
+import { UsersController } from "@/controllers/usersController";
 
 async function signUpWithProfile(email: string, password: string, name: string) {
     const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
@@ -6,21 +7,16 @@ async function signUpWithProfile(email: string, password: string, name: string) 
         password
     });
 
-    if (signUpError) throw signUpError;
+    if (signUpError) throw signUpError; 
 
     const { data: { user } } = await supabase.auth.getUser();
 
     if (user) {
-        const { error: insertError } = await supabase
-        .from('profiles').insert([{
-            id: user.id,
-            name: name,
-            email: email,
-            avatar_url: null,
-            isadmin: true,
-        }]);
-
-        if (insertError) throw insertError;
+        try{ 
+            UsersController.createUser(user.id, name, email, password);
+        } catch(error){
+            throw error;
+        }
     }
 
     return signUpData;
