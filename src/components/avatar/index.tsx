@@ -3,9 +3,9 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { useState } from "react";
 import { styles } from "./styles";
 
-import * as ImagePicker from "expo-image-picker";
 import { uploadImage, deleteImage,getImageUrl } from "@/utils/storage";
 import { UsersController } from "@/controllers/usersController";
+import { PickImage } from "@/utils/pickImage";
 
 type Props = {
     currentUser: any
@@ -15,13 +15,7 @@ export function Avatar({ currentUser }: Props) {
     const [modalActive, setModalActive] = useState(false);
 
     const uploadAvatar = async (currentUser: any) => {
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: 'images',
-            allowsEditing: true,
-            allowsMultipleSelection: false,
-            aspect: [1, 1],
-            quality: 1,
-        });
+        const result = await PickImage();
 
         if(result.canceled || !result.assets.length) {
             return;

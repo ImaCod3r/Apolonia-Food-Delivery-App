@@ -8,6 +8,11 @@ const styles = StyleSheet.create({
     heading: {
         fontSize: 20,
         fontWeight: "bold",
+    },
+    linksContainer: {
+        gap: 10,
+        marginTop: 20,
+        marginBottom: 10
     }
 });
 

@@ -3,11 +3,12 @@ import { COLORS } from "@/styles/colors"
 
 const styles = StyleSheet.create({
     container: {
-        flexDirection: "row",
+        justifyContent: "center",
         alignItems: "center",
         gap: 10,
-        padding: 10,
-        backgroundColor: COLORS.gray
+        padding: 25,
+        backgroundColor: COLORS.gray,
+        borderRadius: 10,
     },
     text: {
         fontSize: 16,

@@ -12,7 +12,7 @@ type Props = {
 
 export function Link({ name, url, icon }: Props) {
     return (
-        <TouchableOpacity onPress={() => router.navigate(url)} style={styles.container}>
+        <TouchableOpacity onPress={() => router.push(url)} style={styles.container}>
             <MaterialIcons name={icon} size={24} color="black" />
             <Text>{name}</Text>
         </TouchableOpacity>
