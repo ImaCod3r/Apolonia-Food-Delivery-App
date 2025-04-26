@@ -2,7 +2,7 @@ import { MaterialIcons } from "@expo/vector-icons"
 
 export const categories = [
     {
-        name: "Pratos",
+        name: "pratos",
         icon: "dinner-dining" as keyof typeof MaterialIcons.glyphMap
     },
     {
@@ -10,7 +10,7 @@ export const categories = [
         icon: "local-drink" as keyof typeof MaterialIcons.glyphMap
     },
     {
-        name: "Sobremesas",
+        name: "sobremesas",
         icon: "cake" as keyof typeof MaterialIcons.glyphMap
     },
     {

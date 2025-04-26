@@ -7,31 +7,23 @@ import { CardItem } from "@/components/cardItem";
 import { Button } from '@/components/button';
 import { Category } from "@/components/category";
 
-import { categories } from "@/utils/categories"
+import { categories } from "@/utils/categories";
 
-export function Menu() {
-    const [currentItem, setCurrentItem] = useState<{ image: string; name: string; category: string; price: number } | null>(null);
+type Props = {
+    data: {
+        image_url: string;
+        name: string;
+        category: string;
+        price: number;
+        description: string;
+    }[]
+}
+
+export function Menu({ data }: Props) {
+    const [currentItem, setCurrentItem] = useState<{ image_url: string; name: string; category: string; price: number } | null>(null);
     const [modalActive, setModalActive] = useState(false);
     const [category, setCategory] = useState('Pratos');
-    const data = 
-        [{
-            image: "https://github.com/imaCod3r.png",
-            name: "Bolo",
-            category: "Sobremesas",
-            price: 1000
-        },
-        {
-            image: "https://github.com/imaCod3r.png",
-            name: "Peixe",
-            category: "Sobremesas",
-            price: 99999
-        },
-        {
-            image: "https://github.com/imaCod3r.png",
-            name: "Frango",
-            category: "Pratos",
-            price: 99999
-        }]
+    
 
     return (
         <View style={styles.container}>
@@ -78,7 +70,7 @@ export function Menu() {
                 transparent={false}
                 visible={modalActive} >
                 <View style={styles.modalContainer}>
-                    <Image source={{ uri: currentItem?.image }} style={styles.coverImage} />
+                    <Image source={{ uri: currentItem?.image_url }} style={styles.coverImage} />
 
                     <TouchableOpacity
                         style={styles.closeButton}

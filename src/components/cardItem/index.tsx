@@ -13,7 +13,7 @@ export function CardItem({ item, ...rest }: Props) {
 
     return (
         <TouchableOpacity style={styles.container} {...rest}>
-                <Image source={{ uri: item.image }} style={styles.image} />
+                <Image source={{ uri: item.image_url }} style={styles.image} />
 
                 <View>
                     <Text style={styles.name}>{item.name}</Text>

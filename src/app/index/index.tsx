@@ -9,27 +9,41 @@ import { Menu } from "@/components/menu";
 import { router } from "expo-router";
 
 import { getcurrentUser } from "@/utils/auth";
+import { ProductsController } from "@/controllers/productsController";
 
 export default function Index() {
     const [currentUser, setCurrentUser] = useState<{ name: string; email: string, avatar_url: string, isadmin: boolean } | null>(null);
+    const [products, setProducts] = useState<any>([]);
+
+    const loadUser = async () => {
+        const currentUser = await getcurrentUser();
+        if (currentUser) {
+            setCurrentUser(currentUser);
+        } else {
+            Alert.alert('Erro', 'Não foi possível carregar os dados do usuário.');
+        }
+    };
+
+    const getProducts = async () => {
+        try {
+            const data = await ProductsController.getAllProducts();
+            setProducts(data);
+        } catch (error) {
+            throw error;
+        }
+    }
 
     useEffect(() => {
-        const loadUser = async () => {
-            const currentUser = await getcurrentUser();
-            if (currentUser) {
-                setCurrentUser(currentUser);
-            } else {
-                Alert.alert('Erro', 'Não foi possível carregar os dados do usuário.');
-            }
-        };
-
+        // Load user data when the component mounts
         loadUser();
+        // Load products data when the component mounts
+        getProducts();
     }, []);
 
-    if(currentUser?.isadmin) {
-        router.navigate("/admin")
-    }
-    
+    // if (currentUser?.isadmin) {
+    //     router.navigate("/admin")
+    // }
+
     return (
         <View style={styles.container}>
 
@@ -38,17 +52,17 @@ export default function Index() {
 
                 <View style={styles.headerActions}>
                     <CartButton />
-                    
+
                     <TouchableOpacity onPress={() => router.navigate('/profile')}>
-                        <Image source={{ uri: currentUser?.avatar_url }} style={styles.profile} /> 
+                        <Image source={{ uri: currentUser?.avatar_url }} style={styles.profile} />
                     </TouchableOpacity>
                 </View>
 
             </View>
-            
+
             <SearchBar icon="search" />
 
-            <Menu />
+            <Menu data={products} />
         </View>
     )
 }
