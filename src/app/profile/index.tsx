@@ -26,6 +26,12 @@ export default function Profile() {
         loadUser();
     }, []);
 
+    const handleAvatarUpdate = (newAvatarUrl: string) => {
+        if (user) {
+            setUser({ ...user, avatar_url: newAvatarUrl });
+        }
+    };
+
     const handleLogout = async () => {
         const result = await logout();
         if (result) {
@@ -39,7 +45,7 @@ export default function Profile() {
     return (
         <ScrollView style={styles.container}>
             <Back />
-            <Avatar currentUser={user} />
+            <Avatar currentUser={user} onAvatarUpdate={handleAvatarUpdate} />
             <Text style={styles.userName}>{user?.name || "Carregando..."}</Text>
 
             <View style={styles.menuOptions}>

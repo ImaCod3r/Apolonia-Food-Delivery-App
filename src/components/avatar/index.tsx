@@ -8,10 +8,11 @@ import { UsersController } from "@/controllers/usersController";
 import { PickImage } from "@/utils/pickImage";
 
 type Props = {
-    currentUser: any
+    currentUser: any,
+    onAvatarUpdate?: (newAvatarUrl: string) => void;
 }
 
-export function Avatar({ currentUser }: Props) {
+export function Avatar({ currentUser, onAvatarUpdate }: Props) {
     const [modalActive, setModalActive] = useState(false);
 
     const uploadAvatar = async (currentUser: any) => {
@@ -31,6 +32,10 @@ export function Avatar({ currentUser }: Props) {
         const imageUrl = await getImageUrl(data.path);
         
         UsersController.updateUser(currentUser.id, currentUser.name, currentUser.email, currentUser.password, imageUrl);
+
+        if (onAvatarUpdate) {
+            onAvatarUpdate(imageUrl);
+        }
     }
 
     return (
