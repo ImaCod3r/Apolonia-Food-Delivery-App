@@ -36,8 +36,16 @@ const styles = StyleSheet.create({
     actions: {
         flexDirection: 'row',
         gap: 5,
-        marginTop: 20,
-        alignItems: 'center'
+        width: '100%',
+        marginTop: 10,
+        alignItems: 'center',
+        backgroundColor: COLORS.white,
+        paddingHorizontal: 20,
+        paddingVertical: 10,
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+
     },
     addButton: {
         padding: 10,
@@ -59,6 +67,9 @@ const styles = StyleSheet.create({
         marginTop: 10, 
         backgroundColor: COLORS.gray,
         borderRadius: 10,
+    },
+    inputGroup: {
+        gap: 5
     }
 });
 

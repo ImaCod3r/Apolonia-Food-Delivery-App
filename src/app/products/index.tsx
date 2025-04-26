@@ -11,12 +11,12 @@ import { ProductsController } from '@/controllers/productsController';
 
 export default function Products() {
     const [modalVisible, setModalVisible] = useState(false);
-    const [selectedProduct, setSelectedProduct] = useState<{ id: number; name: string; price: number; category: string } | null>(null);
+    const [selectedProduct, setSelectedProduct] = useState<any>({});
     const [selectedValue, setSelectedValue] = useState('');
     const [products, setProducts] = useState<any>([]);
 
     const [productName, setProductName] = useState('');
-    const [productPrice, setProductPrice] = useState(0);
+    const [productPrice, setProductPrice] = useState<number>(0);
     const [productCategory, setProductCategory] = useState('');
     const [productDescription, setProductDescription] = useState('');
     const [productImage, setProductImage] = useState('');
@@ -25,11 +25,10 @@ export default function Products() {
         try {
             const data = await ProductsController.getAllProducts();
             setProducts(data);
-            console.log('Products fetched successfully:', data);
         } catch (error) {
-            console.error('Error fetching products:', error);
+            throw error;
         }
-    }   
+    }
 
     useEffect(() => {
         getProducts();
@@ -63,37 +62,43 @@ export default function Products() {
                 renderItem={({ item }) => (
                     <TouchableOpacity style={styles.row} onPress={() => {
                         setSelectedProduct(item);
-                        setModalVisible(true);
+                        setProductName(item.name); 
+                        setProductPrice(item.price); 
+                        setProductCategory(item.category);
+                        setProductDescription(item.description);
+                        setProductImage(item.image_url); 
+                        setModalVisible(true); 
                     }}>
                         <Text>{item.name}</Text>
                         <Text>{item.price}</Text>
                         <Text>{item.category}</Text>
                     </TouchableOpacity>
-                )} />
+                )
+                } />
 
-            <Modal visible={modalVisible} animationType="slide" transparent>
-                <View style={styles.modalContainer}>
+            < Modal visible={modalVisible} animationType="slide" transparent >
+                <ScrollView style={styles.modalContainer}>
                     <View style={styles.modalContent}>
 
-                        <View>
+                        <View style={styles.inputGroup}>
                             <Text>Nome do produto</Text>
-                            <Input placeholder="Ex: Refrigerante" value={selectedProduct?.name}
+                            <Input placeholder="Ex: Refrigerante" value={productName}
                                 onChangeText={(value) => setProductName(value)} />
                         </View>
 
-                        <View>
+                        <View style={styles.inputGroup}>
                             <Text>Preço do produto</Text>
-                            <Input placeholder="R$ 0,00" keyboardType="numeric" value={selectedProduct?.price !== undefined ? String(selectedProduct.price) : undefined}
+                            <Input placeholder="R$ 0,00" keyboardType="numeric" value={productPrice.toString()}
                                 onChangeText={(value) => setProductPrice(+value)} />
                         </View>
 
-                        <View>
+                        <View style={styles.inputGroup}>
                             <Text>Categoria do produto</Text>
                             <View style={styles.select}>
                                 <Picker
-                                    selectedValue={selectedProduct?.category || selectedValue}
+                                    selectedValue={productCategory || selectedValue}
                                     onValueChange={(itemValue, itemIndex) => {
-                                        setSelectedValue(itemValue);
+                                        setProductCategory(itemValue);
                                         setProductCategory(itemValue);
                                     }}>
                                     <Picker.Item label="Pratos" value="pratos" />
@@ -104,37 +109,61 @@ export default function Products() {
                             </View>
                         </View>
 
-                        <View>
+                        <View style={styles.inputGroup}>
+                            <Text>Descrição do produto</Text>
+                            <Input
+                                placeholder="Ex: Refrigerante de 2L"
+                                numberOfLines={4}
+                                multiline
+                                value={productDescription}
+                                onChangeText={(value) => setProductDescription(value)} />
+                        </View>
+
+                        <View style={styles.inputGroup}>
                             <Text>Imagem do produto</Text>
-                            <ImageDisplayer currentItem={selectedProduct} />
+                            <ImageDisplayer currentItem={selectedProduct} onImageChange={(newImage) => setProductImage(newImage)}  />
                         </View>
 
-                        <View style={styles.actions}>
-                            <TouchableOpacity style={styles.button} onPress={() => {
-                                // Salvar lógica
-                                ProductsController.createProduct(productName, productCategory, productDescription, productPrice, productImage)
-                                .then(() => {
-                                    setModalVisible(false);
-                                }).catch(error => {
-                                    Alert.alert('Error', error.message);
-                                }).finally(() => {
-                                    Alert.alert('Sucesso', 'Produto cadastrado com sucesso!');
-                                })
-                            }}>
-                                <Text style={styles.text}>Salvar</Text>
-                            </TouchableOpacity>
-
-                            <TouchableOpacity style={[styles.button, { backgroundColor: "gray" }]} onPress={() => {
-                                // Deletar lógica
-                                setModalVisible(false)
-                            }}>
-                                <Text style={styles.text}>Descartar</Text>
-                            </TouchableOpacity>
-                        </View>
                     </View>
+                </ScrollView>
+                <View style={styles.actions}>
+                    <TouchableOpacity style={styles.button} onPress={() => {
+                        // Salvar lógica
+                        if(!selectedProduct?.id) {
+                            ProductsController.createProduct(productName, productCategory, productDescription, productPrice, productImage)
+                            .then(() => {
+                                setModalVisible(false);
+                            }).catch(error => {
+                                Alert.alert('Error', error.message);
+                            }).finally(() => {
+                                Alert.alert('Sucesso', 'Produto cadastrado com sucesso!');
+                                getProducts();
+                            })
+                        } else {
+                            ProductsController.updateProduct(selectedProduct.id, productName, productCategory, productDescription, productPrice, productImage)
+                            .then(() => {
+                                setModalVisible(false);
+                            }).catch(error => {
+                                Alert.alert('Error', error.message);
+                            }).finally(() => {
+                                Alert.alert('Sucesso', 'Produto atualizado com sucesso!');
+                                getProducts();
+                            })
+                        }
+                    }}>
+                        <Text style={styles.text}>Salvar</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity style={[styles.button, { backgroundColor: "gray" }]} onPress={() => {
+                        // Descartar
+                        setSelectedProduct(null);
+                        setModalVisible(false)
+                    }}>
+                        <Text style={styles.text}>Descartar</Text>
+                    </TouchableOpacity>
                 </View>
             </Modal >
 
-        </View>
+        </View >
     )
 }

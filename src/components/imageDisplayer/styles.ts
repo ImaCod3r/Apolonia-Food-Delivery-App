@@ -8,7 +8,6 @@ const styles = StyleSheet.create({
         height: 250,
         padding: 10,
         borderRadius: 10,
-        marginVertical: 10,
         position: 'relative',
         justifyContent: 'center',
         alignItems: 'center'
