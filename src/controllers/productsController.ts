@@ -31,8 +31,9 @@ export class ProductsController {
                 image_url: image_url,
                 category: category
             }]);
-
+        
         if (error) throw error;
+        console.log('Product created successfully!');
     }
 
     static async updateProduct(id: string, name?: string, category?: string, description?: string, price?: number, image_url?: string) {

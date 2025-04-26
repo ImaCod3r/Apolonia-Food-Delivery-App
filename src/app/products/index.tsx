@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TouchableOpacity, Modal } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Modal, Alert } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useState } from 'react';
@@ -7,51 +7,19 @@ import styles from "./styles";
 import { Input } from '@/components/input';
 import { ImageDisplayer } from '@/components/imageDisplayer';
 
+import { ProductsController } from '@/controllers/productsController';
 
 export default function Products() {
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<{ id: number; name: string; price: number; category: string } | null>(null);
     const [selectedValue, setSelectedValue] = useState('');
 
-    const data = [
-        {
-            id: 1,
-            name: "Produto 1",
-            price: 10.00,
-            category: "Categoria 1"
-        },
-        {
-            id: 2,
-            name: "Produto 2",
-            price: 20.00,
-            category: "Categoria 2"
-        },
-        {
-            id: 3,
-            name: "Produto 3",
-            price: 30.00,
-            category: "Categoria 3",
-            imageUrl: 'https://github.com/imaCod3r.png'
-        },
-        {
-            id: 4,
-            name: "Produto 4",
-            price: 40.00,
-            category: "Categoria 4"
-        },
-        {
-            id: 5,
-            name: "Produto 5",
-            price: 50.00,
-            category: "Categoria 5"
-        },
-        {
-            id: 6,
-            name: "Produto 6",
-            price: 8000,
-            category: "Categoria 6"
-        }
-    ]
+    const [productName, setProductName] = useState('');
+    const [productPrice, setProductPrice] = useState(0);
+    const [productCategory, setProductCategory] = useState('');
+    const [productDescription, setProductDescription] = useState('');
+    const [productImage, setProductImage] = useState('');
+
     return (
         <View style={styles.container}>
             <View>
@@ -61,7 +29,6 @@ export default function Products() {
 
             <TouchableOpacity style={styles.addButton} onPress={() => {
                 setModalVisible(true);
-                setSelectedProduct(null);
             }}>
                 <MaterialIcons name="add" size={24} color="black" />
                 <Text>Adicionar Produto</Text>
@@ -77,17 +44,6 @@ export default function Products() {
             <ScrollView>
                 <View>
 
-                    {/* Linhas da Tabela */}
-                    {data.map((item) => (
-                        <TouchableOpacity key={item.id} style={styles.row} onPress={() => {
-                            setModalVisible(true);
-                            setSelectedProduct(data.filter((product) => product.id === item.id)[0]);
-                        }}>
-                            <Text>{item.name}</Text>
-                            <Text>{item.price}</Text>
-                            <Text>{item.category}</Text>
-                        </TouchableOpacity>
-                    ))}
 
                 </View>
             </ScrollView>
@@ -98,12 +54,14 @@ export default function Products() {
 
                         <View>
                             <Text>Nome do produto</Text>
-                            <Input placeholder="Ex: Refrigerante" value={selectedProduct?.name} />
+                            <Input placeholder="Ex: Refrigerante" value={selectedProduct?.name}
+                                onChangeText={(value) => setProductName(value)} />
                         </View>
 
                         <View>
                             <Text>Preço do produto</Text>
-                            <Input placeholder="R$ 0,00" keyboardType="numeric" value={selectedProduct?.price !== undefined ? String(selectedProduct.price) : undefined} />
+                            <Input placeholder="R$ 0,00" keyboardType="numeric" value={selectedProduct?.price !== undefined ? String(selectedProduct.price) : undefined}
+                                onChangeText={(value) => setProductPrice(+value)} />
                         </View>
 
                         <View>
@@ -111,9 +69,10 @@ export default function Products() {
                             <View style={styles.select}>
                                 <Picker
                                     selectedValue={selectedValue}
-                                    onValueChange={(itemValue, itemIndex) =>
+                                    onValueChange={(itemValue, itemIndex) => {
                                         setSelectedValue(itemValue)
-                                    }>
+                                        setProductCategory(itemValue)
+                                    }}>
                                     <Picker.Item label="Pratos" value="pratos" />
                                     <Picker.Item label="Entradas" value="entradas" />
                                     <Picker.Item label="Sobremesas" value="sobremesas" />
@@ -130,10 +89,18 @@ export default function Products() {
                         <View style={styles.actions}>
                             <TouchableOpacity style={styles.button} onPress={() => {
                                 // Salvar lógica
-                                setModalVisible(false);
+                                ProductsController.createProduct(productName, productCategory, productDescription, productPrice, productImage)
+                                .then(() => {
+                                    setModalVisible(false);
+                                }).catch(error => {
+                                    Alert.alert('Error', error.message);
+                                }).finally(() => {
+                                    Alert.alert('Sucesso', 'Produto cadastrado com sucesso!');
+                                })
                             }}>
                                 <Text style={styles.text}>Salvar</Text>
                             </TouchableOpacity>
+
                             <TouchableOpacity style={[styles.button, { backgroundColor: "gray" }]} onPress={() => {
                                 // Deletar lógica
                                 setModalVisible(false)
@@ -142,8 +109,8 @@ export default function Products() {
                             </TouchableOpacity>
                         </View>
                     </View>
-                    </View>
-                </Modal >
+                </View>
+            </Modal >
 
         </View>
     )
