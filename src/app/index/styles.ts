@@ -27,5 +27,10 @@ export const styles = StyleSheet.create({
         width: 40,
         height: 40,
         borderRadius: 20
+    },
+    adminButton: {
+        backgroundColor: COLORS.primary,
+        padding: 10,
+        borderRadius: 50
     }
 })

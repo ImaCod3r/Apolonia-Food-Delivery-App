@@ -1,4 +1,4 @@
-import { View, Image, TouchableOpacity, Alert } from "react-native";
+import { View, Image, TouchableOpacity, Alert, Text } from "react-native";
 import { useState, useEffect } from "react";
 import { styles } from "./styles";
 
@@ -40,9 +40,6 @@ export default function Index() {
         getProducts();
     }, []);
 
-    // if (currentUser?.isadmin) {
-    //     router.navigate("/admin")
-    // }
 
     return (
         <View style={styles.container}>
@@ -52,6 +49,12 @@ export default function Index() {
 
                 <View style={styles.headerActions}>
                     <CartButton />
+
+                    {currentUser?.isadmin && (
+                        <TouchableOpacity style={styles.adminButton} onPress={() => router.push('/admin')}>
+                            <Text style={{color: '#fff'}}>Admin</Text>
+                        </TouchableOpacity>
+                    )}
 
                     <TouchableOpacity onPress={() => router.navigate('/profile')}>
                         <Image source={{ uri: currentUser?.avatar_url }} style={styles.profile} />
