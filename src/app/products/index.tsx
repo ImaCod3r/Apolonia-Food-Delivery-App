@@ -1,7 +1,7 @@
-import { View, Text, ScrollView, TouchableOpacity, Modal, Alert } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Modal, Alert, FlatList } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { MaterialIcons } from '@expo/vector-icons';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from "./styles";
 
 import { Input } from '@/components/input';
@@ -13,12 +13,27 @@ export default function Products() {
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState<{ id: number; name: string; price: number; category: string } | null>(null);
     const [selectedValue, setSelectedValue] = useState('');
+    const [products, setProducts] = useState<any>([]);
 
     const [productName, setProductName] = useState('');
     const [productPrice, setProductPrice] = useState(0);
     const [productCategory, setProductCategory] = useState('');
     const [productDescription, setProductDescription] = useState('');
     const [productImage, setProductImage] = useState('');
+
+    const getProducts = async () => {
+        try {
+            const data = await ProductsController.getAllProducts();
+            setProducts(data);
+            console.log('Products fetched successfully:', data);
+        } catch (error) {
+            console.error('Error fetching products:', error);
+        }
+    }   
+
+    useEffect(() => {
+        getProducts();
+    }, []);
 
     return (
         <View style={styles.container}>
@@ -41,12 +56,20 @@ export default function Products() {
                 <Text style={styles.columnHeader}>Categoria</Text>
             </View>
 
-            <ScrollView>
-                <View>
-
-
-                </View>
-            </ScrollView>
+            {/* Lista de produtos */}
+            <FlatList
+                data={products}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={({ item }) => (
+                    <TouchableOpacity style={styles.row} onPress={() => {
+                        setSelectedProduct(item);
+                        setModalVisible(true);
+                    }}>
+                        <Text>{item.name}</Text>
+                        <Text>{item.price}</Text>
+                        <Text>{item.category}</Text>
+                    </TouchableOpacity>
+                )} />
 
             <Modal visible={modalVisible} animationType="slide" transparent>
                 <View style={styles.modalContainer}>
@@ -68,10 +91,10 @@ export default function Products() {
                             <Text>Categoria do produto</Text>
                             <View style={styles.select}>
                                 <Picker
-                                    selectedValue={selectedValue}
+                                    selectedValue={selectedProduct?.category || selectedValue}
                                     onValueChange={(itemValue, itemIndex) => {
-                                        setSelectedValue(itemValue)
-                                        setProductCategory(itemValue)
+                                        setSelectedValue(itemValue);
+                                        setProductCategory(itemValue);
                                     }}>
                                     <Picker.Item label="Pratos" value="pratos" />
                                     <Picker.Item label="Entradas" value="entradas" />
