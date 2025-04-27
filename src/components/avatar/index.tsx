@@ -1,9 +1,9 @@
 import { View, Image, TouchableOpacity, Modal, Text } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { styles } from "./styles";
 
-import { uploadImage, deleteImage,getImageUrl } from "@/utils/storage";
+import { uploadImage, deleteImage, getImageUrl, getDefaultImageUrl } from "@/utils/storage";
 import { UsersController } from "@/controllers/usersController";
 import { PickImage } from "@/utils/pickImage";
 
@@ -14,8 +14,9 @@ type Props = {
 
 export function Avatar({ currentUser, onAvatarUpdate }: Props) {
     const [modalActive, setModalActive] = useState(false);
+    const [defaultImageUrl, setDefaultImageUrl] = useState('');
 
-    const uploadAvatar = async (currentUser: any) => {
+    const uploadAvatar = async (currentUser: any) => { 
         const result = await PickImage();
 
         if(result.canceled || !result.assets.length) {
@@ -38,11 +39,24 @@ export function Avatar({ currentUser, onAvatarUpdate }: Props) {
         }
     }
 
+    const handleDefaultImageFetching = async () => {
+        try {
+            const url = await getDefaultImageUrl();
+            setDefaultImageUrl(url);
+        } catch (error) {
+            console.error("Error fetching default image URL:", error);
+        }
+    }
+
+    useEffect(() => {
+        handleDefaultImageFetching();
+    }, []);
+
     return (
         <View>
             <TouchableOpacity style={styles.container} 
                 onPress={() => setModalActive(true)}>
-                <Image source={{ uri: currentUser?.avatar_url || 'https://github.com/imaCod3r.png' }} style={styles.image} />
+                <Image source={{ uri: currentUser?.avatar_url || defaultImageUrl }} style={styles.image} />
             </TouchableOpacity>
 
             <Modal 

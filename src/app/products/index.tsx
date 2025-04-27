@@ -21,6 +21,36 @@ export default function Products() {
     const [productDescription, setProductDescription] = useState('');
     const [productImage, setProductImage] = useState('');
 
+    const handleDeleteProduct = async (productId: string) => {
+        try {
+            await ProductsController.deleteProduct(productId);
+            Alert.alert(
+                'Deletar produto',
+                'Tem certeza de que deseja remover este produto?',
+                [
+                    {
+                        text: 'Cancelar',
+                        style: 'cancel',
+                    },
+                    {
+                        text: 'Confirmar',
+                        onPress: async () => {
+                            await ProductsController.deleteProduct(productId);
+                            setProducts(products.filter((product: any) => product.id !== productId));
+                            Alert.alert('Sucesso', 'Produto removido com sucesso!');
+                            getProducts();
+                        },
+                    },
+                ],
+                { cancelable: true }
+            );
+
+            getProducts();
+        } catch (error) {
+            Alert.alert('Erro', 'Não foi possível remover o produto.');
+        }
+    }
+
     const getProducts = async () => {
         try {
             const data = await ProductsController.getAllProducts();
@@ -41,7 +71,9 @@ export default function Products() {
                 <Text>Adicione, edite ou remova produtos do cardápio.</Text>
             </View>
 
-            <TouchableOpacity style={styles.addButton} onPress={() => {
+            <TouchableOpacity 
+                style={styles.addButton} 
+                onPress={() => {
                 setModalVisible(true);
             }}>
                 <MaterialIcons name="add" size={24} color="black" />
@@ -60,7 +92,10 @@ export default function Products() {
                 data={products}
                 keyExtractor={(item) => item.id.toString()}
                 renderItem={({ item }) => (
-                    <TouchableOpacity style={styles.row} onPress={() => {
+                    <TouchableOpacity
+                    style={styles.row} 
+                    onLongPress={() => handleDeleteProduct(item.id)}
+                    onPress={() => {
                         setSelectedProduct(item);
                         setProductName(item.name); 
                         setProductPrice(item.price); 
@@ -74,7 +109,7 @@ export default function Products() {
                         <Text>{item.category}</Text>
                     </TouchableOpacity>
                 )
-                } />
+            } />
 
             < Modal visible={modalVisible} animationType="slide" transparent >
                 <ScrollView style={styles.modalContainer}>
@@ -157,7 +192,7 @@ export default function Products() {
                     <TouchableOpacity style={[styles.button, { backgroundColor: "gray" }]} onPress={() => {
                         // Descartar
                         setSelectedProduct(null);
-                        setModalVisible(false)
+                        setModalVisible(false);
                     }}>
                         <Text style={styles.text}>Descartar</Text>
                     </TouchableOpacity>

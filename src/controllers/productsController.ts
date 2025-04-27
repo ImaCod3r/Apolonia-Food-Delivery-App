@@ -50,4 +50,13 @@ export class ProductsController {
 
         if (error) throw error;
     }
+
+    static async deleteProduct(id: string) {
+        const { error } = await supabase
+            .from('products')
+            .delete()
+            .eq('id', id);
+
+        if (error) throw error;
+    }
 }

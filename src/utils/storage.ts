@@ -62,4 +62,16 @@ async function deleteImage(path: string) {
   }
 }
 
-export { uploadImage, deleteImage, getImageUrl };
+async function getDefaultImageUrl() {
+  const { data } = supabase.storage
+    .from('avatars')
+    .getPublicUrl('default.png');
+
+  if (!data) {
+    throw new Error('Failed to retrieve default image URL');
+  }
+  
+  const defaultImageUrl = data.publicUrl;
+  return defaultImageUrl;
+}
+export { uploadImage, deleteImage, getImageUrl, getDefaultImageUrl };

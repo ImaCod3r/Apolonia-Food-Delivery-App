@@ -45,7 +45,8 @@ const styles = StyleSheet.create({
         position: 'fixed',
         bottom: 0,
         left: 0,
-
+        borderTopWidth: 1,
+        borderTopColor: COLORS.gray,
     },
     addButton: {
         padding: 10,

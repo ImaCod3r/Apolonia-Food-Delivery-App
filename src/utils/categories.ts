@@ -6,7 +6,7 @@ export const categories = [
         icon: "dinner-dining" as keyof typeof MaterialIcons.glyphMap
     },
     {
-        name: "Bebidas",
+        name: "bebidas",
         icon: "local-drink" as keyof typeof MaterialIcons.glyphMap
     },
     {

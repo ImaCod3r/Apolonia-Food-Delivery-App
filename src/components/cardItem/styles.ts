@@ -9,11 +9,12 @@ export const styles = StyleSheet.create({
     container: {
         flex: 1,
         maxWidth: width / 2 - 20, // Adjusting for margin and gap
-        height: 250,
+        height: 300,
         backgroundColor: COLORS.gray,
         padding: 10,
         borderRadius: 10,
         marginRight: 10,
+        justifyContent: 'space-between'
     },
     image: {
         width: '100%',
@@ -22,14 +23,13 @@ export const styles = StyleSheet.create({
         objectFit: 'cover'
     },
     name: {
-        fontSize: 16,
+        fontSize: 14,
         fontWeight: 'bold'
     }, 
     price: {
         fontWeight: 'bold'
     },
     itemFooter: {
-        marginTop: 15,
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center'
