@@ -1,22 +1,23 @@
 import { supabase } from "@/utils/supabase";
+import { Alert } from "react-native";
 
 export class CartsController {
-    static async getCartByUserId(userId: string) {
+    static async getCartByUserId(userId: any) {
         try {
             const { data, error } = await supabase
                 .from('carts')
                 .select('*')
-                .eq('user_id', userId)
+                .eq('user_id', userId as any)
                 .single();
 
             if (error) {
                 throw error;
             }
 
-            return data;
+            return JSON.parse(data.items); // Parse the items from JSON string to object
         } catch (error) {
-            console.error("Error fetching cart by user ID:", error);
-            throw error;
+            console.error("Error fetching cart:", error);
+
         }
     }
 
@@ -35,7 +36,8 @@ export class CartsController {
 
                 return data.items;
             } catch (error) {
-                return null; // Return null if there's an error fetching items
+                Alert.alert("Error", "Error fetching items from cart. Please try again.");
+                return null; 
             }
         }
 
@@ -46,7 +48,7 @@ export class CartsController {
             items = JSON.parse(items);
         }
 
-        items.push({ product_id: product.id, quantity: 1, price: product.price}); // Assuming price is 0 for now
+        items.push({ product_id: product.id, quantity: 1, price: product.price});
 
         try {
             const { data, error } = await supabase
