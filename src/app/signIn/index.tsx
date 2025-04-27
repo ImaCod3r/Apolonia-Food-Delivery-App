@@ -44,10 +44,6 @@ export default function SignIn() {
 
                 <Button text="Iniciar sessão" isPrimary onClick={() => handleLogin()} />
 
-                <Text style={{ alignSelf: "center" }}>Ou</Text>
-
-                <Button text="Continuar com Google" isPrimary={false} onClick={() => 0} isGoogle />
-
                 <View style={styles.linkLine}>
                     <Text>
                         Ainda não tem uma conta?

@@ -61,15 +61,6 @@ export default function SignUp() {
                     onClick={() => handleSignUp()}
                 />
 
-                <Text
-                    style={{ alignSelf: "center" }}>Ou</Text>
-
-                <Button
-                    text="Continuar com Google"
-                    isPrimary={false}
-                    onClick={() => 0} isGoogle
-                />
-
                 <View style={styles.linkLine}>
                     <Text>
                         Já tem uma conta?
