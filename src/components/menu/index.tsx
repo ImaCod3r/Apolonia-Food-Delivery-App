@@ -23,7 +23,6 @@ export function Menu({ data }: Props) {
     const [currentItem, setCurrentItem] = useState<{ image_url: string; name: string; category: string; price: number } | null>(null);
     const [modalActive, setModalActive] = useState(false);
     const [category, setCategory] = useState('Pratos');
-    
 
     return (
         <View style={styles.container}>
@@ -91,11 +90,10 @@ export function Menu({ data }: Props) {
                             {"AOA " + currentItem?.price}
                         </Text>
 
-
                     </View>
 
                     <View style={styles.modalFooter}>
-                        <Button text="Adicionar ao Carrinho" isGoogle={false} isPrimary onClick={() => {
+                        <Button text="Adicionar ao Carrinho" isPrimary onClick={() => {
                             console.log(`item: ${currentItem?.name} adicionado ao carrinho!`)
                         }} />
                     </View>

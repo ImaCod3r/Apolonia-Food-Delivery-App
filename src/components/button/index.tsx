@@ -1,4 +1,4 @@
-import { TouchableOpacity, Text, Image } from "react-native";
+import { TouchableOpacity, Text } from "react-native";
 
 import { styles } from "./styles";
 import { COLORS } from "@/styles/colors";
@@ -8,7 +8,6 @@ type Props = {
     isPrimary?: boolean,
     onClick: () => void
 }
-
 
 export function Button({ text, isPrimary, onClick }: Props) {
     return (
