@@ -25,7 +25,6 @@ export default function SignIn() {
                 Alert.alert('Erro', error.message)
             }
         }
-
     }
 
     return (
