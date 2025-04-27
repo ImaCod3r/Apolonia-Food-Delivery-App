@@ -136,10 +136,10 @@ export default function Products() {
                                         setProductCategory(itemValue);
                                         setProductCategory(itemValue);
                                     }}>
-                                    <Picker.Item label="Pratos" value="pratos" />
-                                    <Picker.Item label="Entradas" value="entradas" />
-                                    <Picker.Item label="Sobremesas" value="sobremesas" />
-                                    <Picker.Item label="Bebidas" value="bebidas" />
+                                    <Picker.Item label="Pratos" value="Pratos" />
+                                    <Picker.Item label="Entradas" value="Entradas" />
+                                    <Picker.Item label="Sobremesas" value="Sobremesas" />
+                                    <Picker.Item label="Bebidas" value="Bebidas" />
                                 </Picker>
                             </View>
                         </View>

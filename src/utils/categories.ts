@@ -2,15 +2,15 @@ import { MaterialIcons } from "@expo/vector-icons"
 
 export const categories = [
     {
-        name: "pratos",
+        name: "Pratos",
         icon: "dinner-dining" as keyof typeof MaterialIcons.glyphMap
     },
     {
-        name: "bebidas",
+        name: "Bebidas",
         icon: "local-drink" as keyof typeof MaterialIcons.glyphMap
     },
     {
-        name: "sobremesas",
+        name: "Sobremesas",
         icon: "cake" as keyof typeof MaterialIcons.glyphMap
     },
     {
