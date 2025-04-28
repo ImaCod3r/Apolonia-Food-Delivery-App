@@ -23,45 +23,33 @@ export class CartsController {
     }
 
     static async addItemToCart(userId: string, product: any) {
-        const getItems = async (userId: string) => {
-            try {
-                const { data, error } = await supabase
-                    .from('carts')
-                    .select('items')
-                    .eq('user_id', userId)
-                    .single();
-
-                if (error) {
-                    throw error;
-                }
-
-                return data.items;
-            } catch (error) {
-                Alert.alert("Error", "Error fetching items from cart. Please try again.");
-                return null; 
-            }
-        }
-
-        let items = await getItems(userId);
-        if (!items) {
-            items = [];
-        } else {
-            items = JSON.parse(items);
-        }
-
-        items.push({ product_id: product.id, quantity: 1, price: product.price});
-
         try {
             const { data, error } = await supabase
                 .from('carts')
-                .insert([{ user_id: userId, items: JSON.stringify(items)}])
+                .select('items')
+                .eq('user_id', userId)
                 .single();
 
-            if (error) {
+            if (error && error.code !== 'PGRST116') { // Ignore "row not found" error
                 throw error;
             }
 
-            return data;
+            let items = data ? JSON.parse(data.items) : [];
+            const existingItemIndex = items.findIndex((item: any) => item.product_id === product.id);
+
+            if (existingItemIndex !== -1) {
+                items[existingItemIndex].quantity += 1;
+            } else {
+                items.push({ product_id: product.id, quantity: 1, price: product.price });
+            }
+
+            const { error: updateError } = await supabase
+                .from('carts')
+                .upsert({ user_id: userId, items: JSON.stringify(items) }, { onConflict: 'user_id' });
+
+            if (updateError) {
+                throw updateError;
+            }
         } catch (error) {
             console.error("Error adding item to cart:", error);
             throw error;
