@@ -2,16 +2,17 @@ import { useState } from 'react';
 import { View, Text, Image, TouchableOpacity, Alert } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import styles from "./styles";
-import { uploadImage, getImageUrl } from '@/utils/storage'; 
+import { uploadImage, getImageUrl, deleteImage } from '@/utils/storage'; 
+import { ProductsController } from '@/controllers/productsController';
 import { PickImage } from '@/utils/pickImage';
 
 type Props = {
-    currentItem?: any; 
+    currentItem: any; 
     onImageChange: (imageUrl: string) => void; 
 };
 
 export function ImageDisplayer({ currentItem, onImageChange }: Props) {
-    const [localImageUrl, setLocalImageUrl] = useState(currentItem?.image_url || null);
+    const [localImageUrl, setLocalImageUrl] = useState(currentItem?.image_url || '');
 
     const AddNewImage = async () => {
         try {
@@ -38,10 +39,25 @@ export function ImageDisplayer({ currentItem, onImageChange }: Props) {
 
             if (!imageUrl) {
                 Alert.alert("Erro ao obter a URL pública da imagem");
+                return;
             }
 
-            onImageChange(imageUrl); 
+            console.log("URL da imagem:", imageUrl);
+
+            // Deleta a imagem anterior, se existir
+            if (currentItem?.image_url) {
+                try {
+                    const path = currentItem.avatar_url.split('/').pop();
+                    await deleteImage(path as string);
+                } catch (deleteError) {
+                    console.warn("Erro ao deletar a imagem anterior:", deleteError);
+                }
+            }
+
+            // Atualiza o estado do componente pai com a nova URL da imagem
+            onImageChange(imageUrl);
             setLocalImageUrl(imageUrl);
+            ProductsController.updateProduct(currentItem.id, { image_url: imageUrl });
         } catch (error) {
             console.error("Erro ao adicionar nova imagem:", error);
             Alert.alert("Erro", "Erro ao adicionar nova imagem. Tente novamente.");
@@ -59,7 +75,6 @@ export function ImageDisplayer({ currentItem, onImageChange }: Props) {
             {!localImageUrl && (
                 <Text >Nenhuma imagem disponível</Text>
             )}
-                
                 
             {/* Exibe a imagem se disponível */}    
             {localImageUrl && (
