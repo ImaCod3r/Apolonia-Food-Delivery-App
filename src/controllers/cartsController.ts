@@ -1,23 +1,24 @@
+import { getcurrentUser } from "@/utils/auth";
 import { supabase } from "@/utils/supabase";
 import { Alert } from "react-native";
 
 export class CartsController {
-    static async getCartByUserId(userId: any) {
+    static async getCartByUserId(userId: string) {
         try {
             const { data, error } = await supabase
                 .from('carts')
                 .select('*')
-                .eq('user_id', userId as any)
+                .eq('user_id', userId)
                 .single();
 
             if (error) {
                 throw error;
             }
 
-            return JSON.parse(data.items); // Parse the items from JSON string to object
+            return data ? JSON.parse(data.items) : []; 
         } catch (error) {
-            console.error("Error fetching cart:", error);
-
+            console.error("Error fetching cart by user ID:", error);
+            throw error;
         }
     }
 
@@ -67,4 +68,41 @@ export class CartsController {
         }
     }
 
+    static async updateItemQuantity(productId: string, newQuantity: number): Promise<void> {
+        try {
+            const user = await getcurrentUser();
+            if (!user) {
+                throw new Error("User not authenticated");
+            }
+
+            const { data, error } = await supabase
+                .from('carts')
+                .select('items')
+                .eq('user_id', user.id)
+                .single();
+
+            if (error) {
+                throw error;
+            }
+
+            let items = JSON.parse(data.items);
+            const itemIndex = items.findIndex((item: any) => item.product_id === productId);
+
+            if (itemIndex !== -1) {
+                items[itemIndex].quantity = newQuantity;
+
+                const { error: updateError } = await supabase
+                    .from('carts')
+                    .update({ items: JSON.stringify(items) })
+                    .eq('user_id', user.id);
+
+                if (updateError) {
+                    throw updateError;
+                }
+            }
+        } catch (error) {
+            console.error("Error updating item quantity:", error);
+            throw error;
+        }
+    }
 }

@@ -5,7 +5,6 @@ import { styles } from "./styles";
 import { COLORS } from "@/styles/colors";
 
 import { QuantityControl } from "@/components/quantityControl";
-
 import { ProductsController } from "@/controllers/productsController";
 
 type Props = {
@@ -18,6 +17,7 @@ export function CartItem({ item }: Props) {
     useEffect(() => {
         ProductsController.getProductById(item.product_id).then((product) => {
             setCurrentProduct(product);
+            console.log("Product fetched:", product);
         })
     }, []);
 
@@ -31,7 +31,7 @@ export function CartItem({ item }: Props) {
                     <Text style={styles.itemPrice}>AOA {currentProduct?.price}</Text>
                 </View>
 
-                <QuantityControl item={[]} />
+                <QuantityControl item={item} />
             </View>
 
             <TouchableOpacity style={styles.deleteButton}>
