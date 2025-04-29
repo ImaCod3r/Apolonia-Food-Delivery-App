@@ -36,6 +36,22 @@ async function signInWithEmail(email: string, password: string) {
 }
 
 async function getcurrentUser() {
+    const userId = await getUserId();
+
+    const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .single()
+
+    if (error) {
+        console.error('Erro ao buscar dados do usuário:', error)
+    } else {
+        return data;
+    }
+}
+
+async function getUserId() {
     const { data: { user }, error: userError } = await supabase.auth.getUser();
 
     if (userError) {
@@ -46,17 +62,7 @@ async function getcurrentUser() {
         throw new Error('User is not authenticated.');
     }
 
-    const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', user.id)
-        .single()
-
-    if (error) {
-        console.error('Erro ao buscar dados do usuário:', error)
-    } else {
-        return data;
-    }
+    return user.id;
 }
 
 async function logout() {
@@ -67,4 +73,4 @@ async function logout() {
 }
 
 
-export { signUpWithProfile, signInWithEmail,  getcurrentUser, logout };
+export { signUpWithProfile, signInWithEmail,  getcurrentUser, getUserId, logout };

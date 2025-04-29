@@ -1,6 +1,5 @@
 import { getcurrentUser } from "@/utils/auth";
 import { supabase } from "@/utils/supabase";
-import { Alert } from "react-native";
 
 export class CartsController {
     static async getCartByUserId(userId: string) {
