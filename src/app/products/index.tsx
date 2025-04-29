@@ -175,7 +175,7 @@ export default function Products() {
                                 getProducts();
                             })
                         } else {
-                            ProductsController.updateProduct(selectedProduct.id, productName, productCategory, productDescription, productPrice, productImage)
+                            ProductsController.updateProduct(selectedProduct.id, { name: productName, category: productCategory, description: productDescription, price: productPrice, image_url: productImage })
                             .then(() => {
                                 setModalVisible(false);
                             }).catch(error => {

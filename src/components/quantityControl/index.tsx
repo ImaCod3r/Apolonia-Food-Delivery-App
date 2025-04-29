@@ -10,7 +10,7 @@ import { CartsController } from "@/controllers/cartsController";
 
 type Props = {
     item: any
-}
+};
 
 export function QuantityControl({ item }: Props) {
     const [quantity, setQuantity] = useState(item.quantity);

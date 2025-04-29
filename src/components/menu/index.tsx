@@ -20,7 +20,7 @@ type Props = {
 }
 
 export function Menu({ data }: Props) {
-    const [currentItem, setCurrentItem] = useState<{ image_url: string; name: string; category: string; price: number } | null>(null);
+    const [currentItem, setCurrentItem] = useState<{ image_url: string; name: string; category: string; price: number; description: string } | null>(null);
     const [modalActive, setModalActive] = useState(false);
     const [category, setCategory] = useState('Pratos');
 
@@ -38,6 +38,7 @@ export function Menu({ data }: Props) {
                             onPress={() => {
                                 setCategory(item.name)
                             }}
+                            isSelected={item.name === category}
                         />
                     )}
                     showsHorizontalScrollIndicator={false}
@@ -50,12 +51,10 @@ export function Menu({ data }: Props) {
                 data={data.filter(item => item.category === category)}
                 keyExtractor={item => item.name}
                 renderItem={({ item }) => (
-
                     <CardItem item={item} onPress={() => {
                         setModalActive(true);
                         setCurrentItem(item);
-                    }
-                    } />
+                    }} />
                 )}
 
                 showsVerticalScrollIndicator={false}
@@ -89,7 +88,7 @@ export function Menu({ data }: Props) {
                         <Text style={styles.itemPrice}>
                             {"AOA " + currentItem?.price}
                         </Text>
-
+                        <Text>{currentItem?.description}</Text>
                     </View>
 
                     <View style={styles.modalFooter}>

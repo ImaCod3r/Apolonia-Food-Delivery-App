@@ -15,10 +15,7 @@ export function CartItem({ item }: Props) {
     const [currentProduct, setCurrentProduct] = useState<any>({});
 
     useEffect(() => {
-        ProductsController.getProductById(item.product_id).then((product) => {
-            setCurrentProduct(product);
-            console.log("Product fetched:", product);
-        })
+        ProductsController.getProductById(item.product_id).then((product) => setCurrentProduct(product))
     }, []);
 
     return (

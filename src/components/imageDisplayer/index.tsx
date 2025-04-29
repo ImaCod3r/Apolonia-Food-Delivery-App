@@ -42,15 +42,15 @@ export function ImageDisplayer({ currentItem, onImageChange }: Props) {
             console.log("URL da imagem:", imageUrl);
 
             // Deleta a imagem anterior, se existir
-            if (currentItem?.image_url) {
+            if (currentItem.image_url) {
                 try {
                     const path = currentItem.avatar_url.split('/').pop();
                     await deleteImage(path as string);
                 } catch (deleteError) {
                     console.warn("Erro ao deletar a imagem anterior:", deleteError);
                 }
-            }
-
+            } 
+            
             // Atualiza o estado do componente pai com a nova URL da imagem
             ProductsController.updateProduct(currentItem.id, { image_url: imageUrl }).then(() => {
                 onImageChange(imageUrl);

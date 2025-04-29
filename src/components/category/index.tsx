@@ -1,19 +1,22 @@
-import { Text, Pressable, PressableProps } from "react-native";
+import { Text, TouchableOpacity, TouchableOpacityProps } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons"; 
 
 import { styles } from "./styles";
 import { COLORS } from "@/styles/colors";
 
-type Props = PressableProps & {
+type Props = TouchableOpacityProps & {
     icon: keyof typeof MaterialIcons.glyphMap;
     name: string
+    isSelected: boolean
 }
 
-export function Category({ icon, name, ...rest }: Props) {
+export function Category({ icon, name, isSelected, ...rest }: Props) {
     return (
-        <Pressable style={styles.container} onPress={() => console.log(name)} {...rest}>
-                <MaterialIcons name={icon} size={25} color={COLORS.white} />
-                <Text style={styles.label}>{name}</Text>
-        </Pressable>
+        <TouchableOpacity 
+            style={[styles.container, isSelected ? {backgroundColor: COLORS.gray} : null]} 
+            {...rest}>
+                <MaterialIcons name={icon} size={25} color={isSelected ? COLORS.primary :  COLORS.white} />
+                <Text style={[styles.label, isSelected ? {color: COLORS.primary} : null]}>{name}</Text>
+        </TouchableOpacity>
     )
 }

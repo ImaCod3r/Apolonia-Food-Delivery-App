@@ -8,15 +8,12 @@ import { SearchBar } from "@/components/searchBar";
 import { Menu } from "@/components/menu";
 import { router } from "expo-router";
 
-import { getcurrentUser, getUserId } from "@/utils/auth";
+import { getcurrentUser } from "@/utils/auth";
 import { ProductsController } from "@/controllers/productsController";
-import { CartsController } from "@/controllers/cartsController";
 
 export default function Index() {
-    const [userId, setUserId] = useState<string | null>(null);
     const [currentUser, setCurrentUser] = useState<{ name: string; email: string, avatar_url: string, isadmin: boolean } | null>(null);
     const [products, setProducts] = useState<any>([]);
-    const [cartItemsQuantity, setCartItemsQuantity] = useState<number>(0);
 
     const loadUser = async () => {
         const currentUser = await getcurrentUser();
@@ -36,30 +33,11 @@ export default function Index() {
         }
     }
 
-    const loadCartData = async () => {
-        if (currentUser) {
-            try {
-                const userId = await getUserId();
-                setUserId(userId);
-                const cartData = await CartsController.getCartByUserId(userId);
-                return cartData.length;
-            } catch (error) {
-                console.error("Error loading cart data:", error);
-            }
-        }
-    };
-
     useEffect(() => {
         // Load user data when the component mounts
         loadUser();
         // Load products data when the component mounts
         getProducts();
-        // Load cart data when the component mounts
-        loadCartData().then((quantity) => {
-            if (quantity) {
-                setCartItemsQuantity(quantity);
-            }
-        });
     }, []);
 
 

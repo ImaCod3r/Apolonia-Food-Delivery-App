@@ -10,30 +10,33 @@ import { CartsController } from "@/controllers/cartsController";
 import { getUserId } from "@/utils/auth";
 
 export default function Cart() {
-    const [cartItems, setCartItems] = useState<any[]>([]);
+    const [cartItems, setCartItems] = useState<{ product_id: string; price: number; quantity: number }[]>([]);
     const [totalPrice, setTotalPrice] = useState<number>(0);
 
-    useEffect(() => {
-        const fetchCartData = async () => {
-            try {
-                const userId = await getUserId();
-                if (!userId) {
-                    Alert.alert('Erro', 'Não foi possível carregar os dados do usuário.');
-                    return;
-                }
-
-                CartsController.getCartByUserId(userId).then((data) => {
-                    setCartItems(data);
-                    calculateTotalPrice(data);
-                });
-                
-            } catch (error) {
-                Alert.alert('Erro', 'Não foi possível carregar os itens do carrinho.');
+    const fetchCartData = async () => {
+        try {
+            const userId = await getUserId();
+            if (!userId) {
+                Alert.alert('Erro', 'Não foi possível carregar os dados do usuário.');
+                return;
             }
-        };
 
+            CartsController.getCartByUserId(userId).then((data) => {
+                setCartItems(data);
+            });
+            
+        } catch (error) {
+            Alert.alert('Erro', 'Não foi possível carregar os itens do carrinho.');
+        }
+    };
+
+    useEffect(() => {
         fetchCartData();
     }, []);
+
+    useEffect(() => {
+        calculateTotalPrice(cartItems);
+    }, [cartItems]);
 
     function calculateTotalPrice(cartItems: any[]) {
         const total = cartItems.reduce((sum, item) => {
