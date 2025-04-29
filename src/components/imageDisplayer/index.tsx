@@ -12,7 +12,7 @@ type Props = {
 };
 
 export function ImageDisplayer({ currentItem, onImageChange }: Props) {
-    const [localImageUrl, setLocalImageUrl] = useState(currentItem?.image_url || '');
+    const [localImageUrl, setLocalImageUrl] = useState(currentItem?.image_url || null);
 
     const AddNewImage = async () => {
         try {
@@ -24,9 +24,6 @@ export function ImageDisplayer({ currentItem, onImageChange }: Props) {
 
             // Obtém a URI da imagem selecionada
             const imageUri = result.assets[0].uri;
-
-            // Atualiza a pré-visualização local
-            setLocalImageUrl(imageUri);
 
             // Faz o upload da imagem
             const data = await uploadImage(imageUri);
@@ -55,9 +52,12 @@ export function ImageDisplayer({ currentItem, onImageChange }: Props) {
             }
 
             // Atualiza o estado do componente pai com a nova URL da imagem
-            onImageChange(imageUrl);
-            setLocalImageUrl(imageUrl);
-            ProductsController.updateProduct(currentItem.id, { image_url: imageUrl });
+            ProductsController.updateProduct(currentItem.id, { image_url: imageUrl }).then(() => {
+                onImageChange(imageUrl);
+                setLocalImageUrl(imageUrl);
+            }).catch((error) => {
+                Alert.alert("Erro", "Erro ao atualizar/adicionar foto do produto. Tente novamente.");
+            })
         } catch (error) {
             console.error("Erro ao adicionar nova imagem:", error);
             Alert.alert("Erro", "Erro ao adicionar nova imagem. Tente novamente.");

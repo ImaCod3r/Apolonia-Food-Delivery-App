@@ -4,11 +4,13 @@ import { StyleSheet, Dimensions } from "react-native";
 export const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 20
+        padding: 20,
+        justifyContent: 'space-between',
+        alignItems: 'center',
     },
     header: {   
         flexDirection: 'row',
-        alignItems: 'center',
+        alignSelf: 'flex-start',
         gap: 5,
         marginBottom: 10
     },
@@ -22,11 +24,9 @@ export const styles = StyleSheet.create({
     },
     footer: {
         backgroundColor: COLORS.white,
-        position: 'absolute',
-        bottom: 0,
         width: '100%',
         marginHorizontal: 20,
-        paddingVertical: 20,
+        paddingVertical: 10,
         gap: 20,
         borderTopWidth: 1,
         borderTopColor: COLORS.gray

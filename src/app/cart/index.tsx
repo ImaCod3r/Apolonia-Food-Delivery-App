@@ -7,7 +7,7 @@ import { Back } from "@/components/back";
 import { Button } from "@/components/button";
 
 import { CartsController } from "@/controllers/cartsController";
-import { getcurrentUser } from "@/utils/auth";
+import { getUserId } from "@/utils/auth";
 
 export default function Cart() {
     const [cartItems, setCartItems] = useState<any[]>([]);
@@ -16,15 +16,17 @@ export default function Cart() {
     useEffect(() => {
         const fetchCartData = async () => {
             try {
-                const user = await getcurrentUser();
-                if (!user) {
+                const userId = await getUserId();
+                if (!userId) {
                     Alert.alert('Erro', 'Não foi possível carregar os dados do usuário.');
                     return;
                 }
 
-                const cartData = await CartsController.getCartByUserId(user.id);
-                setCartItems(cartData);
-                calculateTotalPrice(cartData);
+                CartsController.getCartByUserId(userId).then((data) => {
+                    setCartItems(data);
+                    calculateTotalPrice(data);
+                });
+                
             } catch (error) {
                 Alert.alert('Erro', 'Não foi possível carregar os itens do carrinho.');
             }

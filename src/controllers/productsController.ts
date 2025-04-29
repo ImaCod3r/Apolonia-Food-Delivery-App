@@ -36,7 +36,7 @@ export class ProductsController {
         console.log('Product created successfully!');
     }
 
-    static async updateProduct(id: string, updates: Partial<{ name: string; category: string; description: string; price: number; image_url: string }>) {
+    static async updateProduct(id: any, updates: Partial<{ name: string; category: string; description: string; price: number; image_url: string }>) {
         const { error } = await supabase
             .from('products')
             .update(updates)
