@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import styles from "./styles";
 
 import { Input } from '@/components/input';
+import { Back } from '@/components/back';
 import { ImageDisplayer } from '@/components/imageDisplayer';
 
 import { ProductsController } from '@/controllers/productsController';
@@ -67,6 +68,7 @@ export default function Products() {
     return (
         <View style={styles.container}>
             <View>
+                <Back />
                 <Text style={styles.heading}>Gerenciar Produtos</Text>
                 <Text>Adicione, edite ou remova produtos do cardápio.</Text>
             </View>

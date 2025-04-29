@@ -1,4 +1,4 @@
-import { View, Image, TouchableOpacity, Alert, Text } from "react-native";
+import { View, Image, TouchableOpacity, Alert, Text, SafeAreaView } from "react-native";
 import { useState, useEffect } from "react";
 import { styles } from "./styles";
 
@@ -40,10 +40,9 @@ export default function Index() {
         getProducts();
     }, []);
 
-
     return (
-        <View style={styles.container}>
-
+        <SafeAreaView style={{flex: 1}}>
+            <View style={styles.container}>
             <View style={styles.header}>
                 <Image source={require('@/assets/logo.png')} style={styles.logo} />
 
@@ -66,6 +65,7 @@ export default function Index() {
             <SearchBar icon="search" />
 
             <Menu data={products} />
-        </View>
+            </View>
+        </SafeAreaView>
     )
 }

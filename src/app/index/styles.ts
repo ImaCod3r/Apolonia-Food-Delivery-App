@@ -6,8 +6,9 @@ export const styles = StyleSheet.create({
         paddingTop: 5,
         paddingBottom: 5,
         flex: 1,
-        paddingHorizontal: 15,
-        gap: 15
+        padding: 15,
+        gap: 15,
+        backgroundColor: COLORS.white,
     },
     header: {
         flexDirection: 'row',
