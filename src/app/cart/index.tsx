@@ -1,4 +1,5 @@
 import { View, FlatList, Text, Alert } from "react-native";
+import { router } from "expo-router";
 import { useState, useEffect } from "react";
 import { styles } from "./styles";
 
@@ -64,7 +65,7 @@ export default function Cart() {
                     <Text>Total</Text>
                     <Text style={styles.totalPrice}>{totalPrice}</Text>
                 </View>
-                <Button text="Confirmar" isPrimary onClick={() => void (0)} />
+                <Button text="Confirmar" isPrimary onClick={() => router.push('/ordering')} />
             </View>
         </View>
     )
