@@ -1,6 +1,6 @@
-import { FlatList, Modal, View, TouchableOpacity, Image, Text } from 'react-native';
+import { FlatList, Modal, View, TouchableOpacity, Image, Text, Alert } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { styles } from "./styles";
 
 import { CardItem } from "@/components/cardItem";
@@ -8,6 +8,8 @@ import { Button } from '@/components/button';
 import { Category } from "@/components/category";
 
 import { categories } from "@/utils/categories";
+import { getUserId } from '@/utils/auth';
+import { CartsController } from '@/controllers/cartsController';
 
 type Props = {
     data: {
@@ -20,9 +22,20 @@ type Props = {
 }
 
 export function Menu({ data }: Props) {
+    const [userId, setUserId] = useState<string>('');
     const [currentItem, setCurrentItem] = useState<{ image_url: string; name: string; category: string; price: number; description: string } | null>(null);
     const [modalActive, setModalActive] = useState(false);
     const [category, setCategory] = useState('Pratos');
+
+    useEffect(() => {
+        getUserId().then((user) => setUserId(user));
+    }, [])
+
+    const handleAddToCart = async (userId: string, product: any) => {
+        CartsController.addItemToCart(userId, product).then(() => {
+            Alert.alert('Sucesso', 'Produto adicionado ao carrinho com sucesso!');
+        });
+    }
 
     return (
         <View style={styles.container}>
@@ -32,8 +45,8 @@ export function Menu({ data }: Props) {
                     data={categories}
                     keyExtractor={item => item.name}
                     renderItem={({ item }) => (
-                        <Category 
-                            icon={item.icon} 
+                        <Category
+                            icon={item.icon}
                             name={item.name}
                             onPress={() => {
                                 setCategory(item.name)
@@ -93,7 +106,8 @@ export function Menu({ data }: Props) {
 
                     <View style={styles.modalFooter}>
                         <Button text="Adicionar ao Carrinho" isPrimary onClick={() => {
-                            console.log(`item: ${currentItem?.name} adicionado ao carrinho!`)
+                            handleAddToCart(userId, currentItem);
+                            setModalActive(false);
                         }} />
                     </View>
                 </View>
