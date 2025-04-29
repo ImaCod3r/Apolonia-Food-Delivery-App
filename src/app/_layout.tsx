@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { StatusBar } from 'react-native'
-import { Slot, Redirect } from 'expo-router'
-import { supabase } from '@/utils/supabase' // ajuste o caminho se necessário
-import { COLORS } from '@/styles/colors'
+import { StatusBar } from 'react-native';
+import { Slot, Redirect } from 'expo-router';
+import { supabase } from '@/utils/supabase'; // ajuste o caminho se necessário
+import { COLORS } from '@/styles/colors';
 
 export default function Layout() {
   const [isLoading, setIsLoading] = useState(true)
