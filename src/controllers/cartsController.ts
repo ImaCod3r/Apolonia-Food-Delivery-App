@@ -14,9 +14,12 @@ export class CartsController {
                 throw error;
             }
 
+            if(!data) {
+                return
+            }
+
             return data ? JSON.parse(data.items) : []; 
         } catch (error) {
-            console.error("Error fetching cart by user ID:", error);
             throw error;
         }
     }

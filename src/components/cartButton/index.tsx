@@ -18,6 +18,9 @@ export function CartButton() {
                 setCartItemsQuantity(cartData.length);
             }
         } catch (error) {
+            if ((error as { code?: string }).code === "PGRST116") {
+                return;
+            }
             console.error("Error loading cart data:", error);
         }
     };
