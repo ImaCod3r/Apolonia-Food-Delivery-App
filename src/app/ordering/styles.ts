@@ -46,6 +46,10 @@ const styles = StyleSheet.create({
         right: 16,
         zIndex: 9
     },
+    select: {
+        backgroundColor: COLORS.gray,
+        borderRadius: 10,
+    },
     openModalButtonText: {
         color: "#fff",
         fontSize: 10,

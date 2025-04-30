@@ -36,10 +36,11 @@ export default function Products() {
                     {
                         text: 'Confirmar',
                         onPress: async () => {
-                            await ProductsController.deleteProduct(productId);
-                            setProducts(products.filter((product: any) => product.id !== productId));
-                            Alert.alert('Sucesso', 'Produto removido com sucesso!');
-                            getProducts();
+                            await ProductsController.deleteProduct(productId).then(() => {
+                                setProducts(products.filter((product: any) => product.id !== productId));
+                                Alert.alert('Sucesso', 'Produto removido com sucesso!');
+                                getProducts();
+                            });
                         },
                     },
                 ],
@@ -125,7 +126,7 @@ export default function Products() {
 
                         <View style={styles.inputGroup}>
                             <Text>Preço do produto</Text>
-                            <Input placeholder="R$ 0,00" keyboardType="numeric" value={productPrice.toString()}
+                            <Input placeholder="AOA 0,00" keyboardType="numeric" value={productPrice.toString()}
                                 onChangeText={(value) => setProductPrice(+value)} />
                         </View>
 

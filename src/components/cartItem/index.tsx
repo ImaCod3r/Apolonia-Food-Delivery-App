@@ -1,4 +1,4 @@
-import { View, Image, Text, TouchableOpacity } from "react-native"; 
+import { View, Image, Text, TouchableOpacity } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { styles } from "./styles";
@@ -15,7 +15,10 @@ export function CartItem({ item }: Props) {
     const [currentProduct, setCurrentProduct] = useState<any>({});
 
     useEffect(() => {
-        ProductsController.getProductById(item.product_id).then((product) => setCurrentProduct(product))
+        ProductsController.getProductById(item.product_id).then((product) => {
+            if (!product) return;
+            setCurrentProduct(product)
+        })
     }, []);
 
     return (
@@ -32,7 +35,7 @@ export function CartItem({ item }: Props) {
             </View>
 
             <TouchableOpacity style={styles.deleteButton}>
-                <MaterialIcons name="delete" size={20} color={COLORS.black}/>
+                <MaterialIcons name="delete" size={20} color={COLORS.black} />
             </TouchableOpacity>
         </View>
     )
