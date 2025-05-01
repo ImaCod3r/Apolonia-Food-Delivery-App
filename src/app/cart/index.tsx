@@ -65,7 +65,19 @@ export default function Cart() {
                     <Text>Total</Text>
                     <Text style={styles.totalPrice}>{totalPrice}</Text>
                 </View>
-                <Button text="Confirmar" isPrimary onClick={() => router.push('/ordering')} />
+                <Button text="Confirmar" isPrimary onClick={() => { 
+                    if(cartItems.length === 0) {
+                        Alert.alert('Carrinho vazio', 'Adicione itens ao carrinho antes de prosseguir.');
+                        return;
+                    }
+
+                    router.push({
+                         pathname: '/ordering', 
+                         params: { cartItems: JSON.stringify(cartItems) }
+                    })
+                    
+                    
+                }}/>
             </View>
         </View>
     )

@@ -1,10 +1,12 @@
-import { useState, useEffect, useRef } from "react";
-import MapView, { Marker } from "react-native-maps";
 import { View, Text, Modal, TouchableOpacity, Alert } from "react-native";
+import MapView, { Marker } from "react-native-maps";
 import { Picker } from '@react-native-picker/picker';
+import { useLocalSearchParams } from "expo-router";
+import { useState, useEffect, useRef } from "react";
 import styles from "./styles";
 
 import { Input } from "@/components/input";
+import { Button } from "@/components/button";
 
 import {
     requestForegroundPermissionsAsync,
@@ -13,9 +15,14 @@ import {
     watchPositionAsync,
     LocationAccuracy
 } from "expo-location";
-import { Button } from "@/components/button";
+
+import { OrdersController } from "@/controllers/ordersController";
+import { getUserId } from "@/utils/auth";
 
 export default function Ordering() {
+    const params = useLocalSearchParams();
+    const [contact, setContact] = useState("");
+    const [paymentMethod, setPaymentMethod] = useState("TPA");
     const [location, setLocation] = useState<LocationObject | null>(null);
     const [modalVisible, setModalVisible] = useState(false);
     const mapRef = useRef<MapView>(null);
@@ -56,7 +63,59 @@ export default function Ordering() {
         setModalVisible(true);
     }, [])
 
+    const verifyFields = (contact: string, paymentMethod: string) => {
+        const isContactValid = contact.trim() !== '' && contact.length === 9;
+        const isPaymentMethodValid = paymentMethod.trim() !== '';
 
+        if (!isContactValid) {
+            Alert.alert("Campo vazio", "Por favor, preencha o campo de contacto.");
+            return false;
+        }
+        if (!isPaymentMethodValid) {
+            Alert.alert("Campo vazio", "Por favor, selecione o método de pagamento.");
+            return false;
+        }
+
+        return true;
+    }
+
+    const fetchUserId = async () => {
+        try {
+            const id = await getUserId();
+            return id;
+        } catch (error) {
+            Alert.alert("Erro", "Não foi possível buscar os dados do usuário.");
+        }
+    }
+
+    const handleCreateOrder = async () => {
+        if (!location) {
+            Alert.alert("Erro", "Localização não encontrada.");
+            return;
+        }
+
+        const isValid = verifyFields(contact, paymentMethod);
+
+        if (!isValid) {
+            return;
+        }
+
+        const items = JSON.stringify(params.cartItems);
+
+        try {
+            fetchUserId().then((userId) => {
+                if (userId) {
+                    OrdersController.createOrder(userId, contact, paymentMethod, location, items);
+                } else {
+                    Alert.alert("Erro", "ID do usuário não encontrado.");
+                }
+            })
+        } catch (error) {
+            throw error;
+        }
+
+        return true;
+    }
 
     return (
         <View style={styles.container}>
@@ -73,13 +132,19 @@ export default function Ordering() {
                     </View>
                     <View style={styles.inputContainer}>
                         <Text style={styles.label}>Informe seu contacto</Text>
-                        <Input placeholder="+244 923 000 000" />
+                        <Input placeholder="923 000 000"
+                            keyboardType="phone-pad"
+                            onChangeText={(text) => {
+                                setContact(text);
+                            }} />
                     </View>
 
                     <View style={styles.inputContainer}>
                         <Text style={styles.label}>Método de pagamento</Text>
                         <View style={styles.select}>
-                            <Picker>
+                            <Picker
+                                onValueChange={(itemValue) => setPaymentMethod(itemValue)}
+                                selectedValue={paymentMethod} >
                                 <Picker.Item label="TPA" value="TPA" />
                                 <Picker.Item label="Numarario" value="Numerario" />
                             </Picker>
@@ -87,7 +152,14 @@ export default function Ordering() {
                     </View>
 
                     <View style={styles.inputContainer}>
-                        <Button text="Pedir" onClick={() => void (0)} isPrimary />
+                        <Button text="Pedir" onClick={() => {
+                            handleCreateOrder().then((result) => {
+                                if(result) {
+                                    Alert.alert("Sucesso", "Pedido realizado com sucesso!");
+                                    setModalVisible(false);
+                                }
+                            })
+                        }} isPrimary />
                     </View>
                 </View>
             </Modal>
