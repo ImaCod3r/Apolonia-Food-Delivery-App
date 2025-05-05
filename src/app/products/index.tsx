@@ -24,7 +24,6 @@ export default function Products() {
 
     const handleDeleteProduct = async (productId: string) => {
         try {
-            await ProductsController.deleteProduct(productId);
             Alert.alert(
                 'Deletar produto',
                 'Tem certeza de que deseja remover este produto?',
