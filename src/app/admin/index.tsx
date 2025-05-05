@@ -12,7 +12,7 @@ export default function Admin() {
                 <Text style={styles.heading}>Painel de Administrador</Text>
             </View>
             <View style={styles.linksContainer}>
-                <Link name="Pedidos" url="/products" icon="book" />
+                <Link name="Pedidos" url="/orders" icon="book" />
                 <Link name="Cardápio" url="/products" icon="inventory" />
                 <Link name="Usuários" url="/products" icon="supervised-user-circle" />
             </View>

@@ -14,7 +14,7 @@ export function CartButton() {
         try {
             const userId = await getUserId();
             if (userId) {
-                const cartData = await CartsController.getCartByUserId(userId);
+                const cartData = await CartsController.getCartItemsByUserId(userId);
                 setCartItemsQuantity(cartData.length);
             }
         } catch (error) {

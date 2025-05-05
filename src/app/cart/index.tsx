@@ -22,7 +22,7 @@ export default function Cart() {
                 return;
             }
 
-            CartsController.getCartByUserId(userId).then((data) => {
+            CartsController.getCartItemsByUserId(userId).then((data) => {
                 setCartItems(data);
             });
             
@@ -75,7 +75,6 @@ export default function Cart() {
                          pathname: '/ordering', 
                          params: { cartItems: JSON.stringify(cartItems) }
                     })
-                    
                     
                 }}/>
             </View>

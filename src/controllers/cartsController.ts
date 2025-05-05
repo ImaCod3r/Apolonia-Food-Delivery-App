@@ -2,7 +2,7 @@ import { getcurrentUser } from "@/utils/auth";
 import { supabase } from "@/utils/supabase";
 
 export class CartsController {
-    static async getCartByUserId(userId: string) {
+    static async getCartItemsByUserId(userId: string) {
         try {
             const { data, error } = await supabase
                 .from('carts')
@@ -36,6 +36,8 @@ export class CartsController {
                 throw error;
             }
 
+            console.log(data);
+            
             let items = data ? JSON.parse(data.items) : [];
             const existingItemIndex = items.findIndex((item: any) => item.product_id === product.id);
 

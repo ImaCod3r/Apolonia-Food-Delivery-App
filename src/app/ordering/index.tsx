@@ -33,7 +33,6 @@ export default function Ordering() {
         if (granted) {
             const currentLocation = await getCurrentPositionAsync();
             setLocation(currentLocation);
-            console.log(currentLocation)
         } else {
             Alert.alert("Permissão de localização negada", "Por favor, ative a permissão de localização nas configurações do aplicativo.");
             return;
@@ -71,6 +70,7 @@ export default function Ordering() {
             Alert.alert("Campo vazio", "Por favor, preencha o campo de contacto.");
             return false;
         }
+
         if (!isPaymentMethodValid) {
             Alert.alert("Campo vazio", "Por favor, selecione o método de pagamento.");
             return false;
@@ -100,12 +100,13 @@ export default function Ordering() {
             return;
         }
 
-        const items = JSON.stringify(params.cartItems);
+        const items = params.cartItems;
 
         try {
             fetchUserId().then((userId) => {
                 if (userId) {
-                    OrdersController.createOrder(userId, contact, paymentMethod, location, items);
+                    const userLocation = { latitude: location.coords.latitude, longitude: location.coords.longitude }
+                    OrdersController.createOrder(userId, contact, paymentMethod, userLocation.latitude, userLocation.longitude, items as string);
                 } else {
                     Alert.alert("Erro", "ID do usuário não encontrado.");
                 }
