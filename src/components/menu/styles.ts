@@ -33,7 +33,10 @@ export const styles = StyleSheet.create({
         position: 'absolute',
         top: 0,
         right: 0,
-        margin: 10
+        margin: 10,
+        borderRadius: 50,
+        padding: 10,
+        backgroundColor: COLORS.gray
     },
     itemInfo: {
         margin: 20,

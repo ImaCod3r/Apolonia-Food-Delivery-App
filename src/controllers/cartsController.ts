@@ -24,7 +24,7 @@ export class CartsController {
         }
     }
 
-    static async addItemToCart(userId: string, product: any) {
+    static async addItemToCart(userId: any, product: any) {
         try {
             const { data, error } = await supabase
                 .from('carts')

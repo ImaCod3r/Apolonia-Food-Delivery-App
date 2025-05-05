@@ -4,7 +4,8 @@ import { COLORS } from "@/styles/colors";
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 20
+        padding: 20,
+        backgroundColor: COLORS.white
     },
     header: {
         flexDirection: 'row',
@@ -17,8 +18,7 @@ const styles = StyleSheet.create({
     tableHeader: {
         borderBottomWidth: 2,
         borderColor: COLORS.gray,
-        marginTop: 10,
-
+        marginTop: 10
     },
     row: {
         flexDirection: 'row',
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     },
     cardItem: {
         width: 160,
-        height: 280,
+        height: 240,
         justifyContent: "space-between",
         padding: 10,
         backgroundColor: COLORS.gray,
@@ -70,10 +70,11 @@ const styles = StyleSheet.create({
         borderRadius: 10
     },
     cardItemName: {
-        fontWeight: "bold"
+        fontWeight: "bold",
+        marginTop: 10
     },
     cardItemPrice: {
-        fontSize: 14,
+        fontSize: 12,
         fontWeight: "bold"
     }
 })

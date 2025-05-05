@@ -168,6 +168,8 @@ export default function Orders() {
                                     )}
                                     horizontal
                                     style={{ marginBottom: 10 }}
+                                    contentContainerStyle={{ gap: 10, marginTop: 10}}
+                                    showsHorizontalScrollIndicator={false}
                                 />
                             </View>
                         </View>

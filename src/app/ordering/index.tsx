@@ -146,8 +146,8 @@ export default function Ordering() {
                             <Picker
                                 onValueChange={(itemValue) => setPaymentMethod(itemValue)}
                                 selectedValue={paymentMethod} >
-                                <Picker.Item label="TPA" value="TPA" />
-                                <Picker.Item label="Numarario" value="Numerario" />
+                                <Picker.Item label="TPA" value="TPA" color="#000" />
+                                <Picker.Item label="Dinheiro" value="Dinheiro" color="#000" />
                             </Picker>
                         </View>
                     </View>

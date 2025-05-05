@@ -10,6 +10,7 @@ import { Category } from "@/components/category";
 import { categories } from "@/utils/categories";
 import { getUserId } from '@/utils/auth';
 import { CartsController } from '@/controllers/cartsController';
+import { COLORS } from '@/styles/colors';
 
 type Props = {
     data: {
@@ -88,7 +89,7 @@ export function Menu({ data }: Props) {
                         onPress={() => {
                             setModalActive(false);
                         }}>
-                        <MaterialIcons name='close' size={30} color={"#fff"} />
+                        <MaterialIcons name='close' size={30} color={COLORS.primary} />
                     </TouchableOpacity>
 
                     <View style={styles.itemInfo} >

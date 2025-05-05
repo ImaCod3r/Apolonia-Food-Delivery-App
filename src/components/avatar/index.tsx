@@ -16,26 +16,31 @@ export function Avatar({ currentUser, onAvatarUpdate }: Props) {
     const [modalActive, setModalActive] = useState(false);
     const [defaultImageUrl, setDefaultImageUrl] = useState('');
 
-    const uploadAvatar = async (currentUser: any) => { 
-        const result = await PickImage();
+    const uploadAvatar = async (currentUser: any) => {
+        try {
+            const result = await PickImage();
 
-        if(result.canceled || !result.assets.length) {
-            return;
-        }
+            if (result.canceled || !result.assets.length) {
+                return;
+            }
 
-        if(currentUser.avatar_url) {
-            const path = currentUser.avatar_url.split('/').pop();
-            await deleteImage(path as string);
-        }
 
-        const image = result.assets[0].uri;
-        const data = await uploadImage(image as string);
-        const imageUrl = await getImageUrl(data.path);
-        
-        UsersController.updateUser(currentUser.id, currentUser.name, currentUser.email, currentUser.password, imageUrl);
+            if (currentUser.avatar_url) {
+                const path = currentUser.avatar_url.split('/').pop();
+                await deleteImage(path as string);
+            }
 
-        if (onAvatarUpdate) {
-            onAvatarUpdate(imageUrl);
+            const image = result.assets[0].uri;
+            const data = await uploadImage(image as string);
+            const imageUrl = await getImageUrl(data.path);
+
+            UsersController.updateUser(currentUser.id, currentUser.name, currentUser.email, currentUser.password, imageUrl);
+
+            if (onAvatarUpdate) {
+                onAvatarUpdate(imageUrl);
+            }
+        } catch (error) {
+            throw error;
         }
     }
 
@@ -54,22 +59,24 @@ export function Avatar({ currentUser, onAvatarUpdate }: Props) {
 
     return (
         <View>
-            <TouchableOpacity style={styles.container} 
+            <TouchableOpacity style={styles.container}
                 onPress={() => setModalActive(true)}>
                 <Image source={{ uri: currentUser?.avatar_url || defaultImageUrl }} style={styles.image} />
             </TouchableOpacity>
 
-            <Modal 
+            <Modal
                 visible={modalActive}
-                transparent 
-                onRequestClose={(e) => setModalActive(false)} 
+                transparent
+                onRequestClose={(e) => setModalActive(false)}
                 animationType="fade">
                 <View style={styles.modalContainer}>
-                <TouchableOpacity style={styles.option}
-                    onPress={async () => {
-                        uploadAvatar(currentUser);
-                        setModalActive(false);
-                    }}>
+                    <TouchableOpacity style={styles.option}
+                        onPress={() => {
+                            uploadAvatar(currentUser)
+                            .then(() => {
+                                setModalActive(false);
+                            })
+                        }}>
                         <MaterialIcons name="folder" size={30} />
                         <Text>Escolher uma foto</Text>
                     </TouchableOpacity>
