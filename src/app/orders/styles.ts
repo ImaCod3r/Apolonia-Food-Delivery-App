@@ -22,9 +22,12 @@ const styles = StyleSheet.create({
     },
     row: {
         flexDirection: 'row',
-        justifyContent: 'space-around',
-        gap: 10,
-        paddingVertical: 10
+        paddingVertical: 10,
+        justifyContent: "space-between"
+    }, 
+    column: {
+        maxWidth: 80,
+        // minWidth: 80
     },
     modalContainer: {
         flex: 1,
@@ -34,9 +37,10 @@ const styles = StyleSheet.create({
         flex: 1
     },
     modalFooter: {
-        paddingVertical: 20,
+        paddingTop: 10,
         borderTopWidth: 1,
-        borderTopColor: COLORS.gray
+        borderTopColor: COLORS.gray,
+        gap: 5
     },
     userInfo: {
         flexDirection: "row",

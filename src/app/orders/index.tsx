@@ -36,6 +36,14 @@ export default function Orders() {
         }
     }
 
+    const acceptOrder = async (orderId: number) => {
+        try {
+            await OrdersController.UpdateOrderStatus(orderId, "aceite");
+        } catch (error) {
+            throw error;
+        }
+    }
+
     useEffect(() => {
         fetchOrders();
         console.log(users);
@@ -54,10 +62,10 @@ export default function Orders() {
 
             <View>
                 <View style={[styles.row, styles.tableHeader]}>
-                    <Text>#</Text>
-                    <Text>Nome</Text>
-                    <Text>Data</Text>
-                    <Text>status</Text>
+                    <Text style={styles.column}>#</Text>
+                    <Text style={styles.column}>Nome</Text>
+                    <Text style={styles.column}>Data</Text>
+                    <Text style={styles.column}>status</Text>
                 </View>
 
                 <FlatList
@@ -92,10 +100,10 @@ export default function Orders() {
                                 waitForCartToLoad();
                             }}
                         >
-                            <Text>{item.id}</Text>
-                            <Text>{item.owner_name}</Text>
-                            <Text>{item.created_at}</Text>
-                            <Text>{item.status}</Text>
+                            <Text style={styles.column}>{item.id}</Text>
+                            <Text style={styles.column}>{item.owner_name}</Text>
+                            <Text style={styles.column}>{item.created_at}</Text>
+                            <Text style={styles.column}>{item.status}</Text>
                         </TouchableOpacity>
                     )}
                     keyExtractor={(item) => item.id.toString()}
@@ -112,7 +120,7 @@ export default function Orders() {
                     <ScrollView style={styles.modalContent}>
                         <View style={{ gap: 10 }}>
                             <View style={styles.userInfo}>
-                                <Image source={{ uri: currentOrder?.owner_avatar}} style={styles.userProfilePhoto} />
+                                <Image source={{ uri: currentOrder?.owner_avatar }} style={styles.userProfilePhoto} />
                                 <View>
                                     <Text style={styles.userName}>{currentOrder?.owner_name}</Text>
                                     <Text>{currentOrder?.phone_number}</Text>
@@ -166,7 +174,15 @@ export default function Orders() {
 
                     </ScrollView>
                     <View style={styles.modalFooter}>
-                        <Button text="Atender pedido" isPrimary onClick={() => void (0)} />
+                        <Button text="Aceitar pedido" isPrimary onClick={() => {
+                            acceptOrder(currentOrder?.id).then(() => {
+                                Alert.alert("Sucesso!", `O pedido "${currentOrder?.id}" foi aceite.`)
+                                setModalVisible(false);
+                            }).catch((error) => {
+                                Alert.alert("Não foi possível aceitar pedido!", "Tente novamente.");
+                            })
+                        }}/>
+                        <Button text="Recusar pedido" isPrimary={false} onClick={() => void (0)} />
                     </View>
                 </View>
             </Modal>

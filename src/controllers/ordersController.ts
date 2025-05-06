@@ -41,6 +41,17 @@ export class OrdersController {
         return data;
     }
 
+    static async UpdateOrderStatus(id: number, newStatus: string) {
+        const { data, error } = await supabase
+            .from('orders')
+            .update({
+                status: newStatus
+            })
+            .eq("id", id);
+
+        if(error) throw error;
+    }
+
     static async getOrderItems(id: number) {
         try {
             const { data, error } = await supabase
