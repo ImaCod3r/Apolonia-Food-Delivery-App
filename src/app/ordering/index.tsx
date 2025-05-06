@@ -1,7 +1,7 @@
 import { View, Text, Modal, TouchableOpacity, Alert } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { Picker } from '@react-native-picker/picker';
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { useState, useEffect, useRef } from "react";
 import styles from "./styles";
 
@@ -17,7 +17,7 @@ import {
 } from "expo-location";
 
 import { OrdersController } from "@/controllers/ordersController";
-import { getUserId } from "@/utils/auth";
+import { getUserId, getcurrentUser } from "@/utils/auth";
 
 export default function Ordering() {
     const params = useLocalSearchParams();
@@ -79,10 +79,10 @@ export default function Ordering() {
         return true;
     }
 
-    const fetchUserId = async () => {
+    const fetchUser= async () => {
         try {
-            const id = await getUserId();
-            return id;
+            const user = await getcurrentUser();
+            return user;
         } catch (error) {
             Alert.alert("Erro", "Não foi possível buscar os dados do usuário.");
         }
@@ -103,10 +103,10 @@ export default function Ordering() {
         const items = params.cartItems;
 
         try {
-            fetchUserId().then((userId) => {
-                if (userId) {
+            fetchUser().then((user) => {
+                if (user) {
                     const userLocation = { latitude: location.coords.latitude, longitude: location.coords.longitude }
-                    OrdersController.createOrder(userId, contact, paymentMethod, userLocation.latitude, userLocation.longitude, items as string);
+                    OrdersController.createOrder(user.id, contact, paymentMethod, userLocation.latitude, userLocation.longitude, items as string, user.name, user.avatar_url);
                 } else {
                     Alert.alert("Erro", "ID do usuário não encontrado.");
                 }
@@ -158,6 +158,7 @@ export default function Ordering() {
                                 if(result) {
                                     Alert.alert("Sucesso", "Pedido realizado com sucesso!");
                                     setModalVisible(false);
+                                    router.push("/" as any);
                                 }
                             })
                         }} isPrimary />

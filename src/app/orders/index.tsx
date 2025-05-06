@@ -14,25 +14,16 @@ export default function Orders() {
     const [modalVisible, setModalVisible] = useState(false);
     const [orders, setOrders] = useState<any[] | null>(null);
 
-    const [currentUser, setCurrentUser] = useState<any | null>(null)
+    const [users, setUsers] = useState<any[]>([])
     const [currentOrder, setCurrentOrder] = useState<any | undefined>(undefined);
     const [products, setProducts] = useState<any[]>([]);
 
     const fetchOrders = async () => {
         try {
             const data = await OrdersController.getOrders();
-            return data;
+            setOrders(data || null);
         } catch (error) {
             Alert.alert("Error ao carregar pedidos");
-        }
-    }
-
-    const fetchUser = async (order: any): Promise<any> => {
-        try {
-            const user = await UsersController.getUserById(order.user_id);
-            return user;
-        } catch (error) {
-            throw error
         }
     }
 
@@ -46,9 +37,8 @@ export default function Orders() {
     }
 
     useEffect(() => {
-        fetchOrders().then((data) => {
-            setOrders(data || null);
-        });
+        fetchOrders();
+        console.log(users);
     }, []);
 
     return (
@@ -89,8 +79,6 @@ export default function Orders() {
                                         console.log(i);
                                         try {
                                             const productInfo = await fetchMatchedProduct(i.product_id);
-                                            const user = fetchUser(item);
-                                            setCurrentUser(user);
                                             productsList.push(productInfo);
                                         } catch (error) {
                                             throw error;
@@ -101,13 +89,11 @@ export default function Orders() {
                                     setModalVisible(true);
                                 };
 
-                                
-
                                 waitForCartToLoad();
                             }}
                         >
                             <Text>{item.id}</Text>
-                            <Text>{item.name}</Text>
+                            <Text>{item.owner_name}</Text>
                             <Text>{item.created_at}</Text>
                             <Text>{item.status}</Text>
                         </TouchableOpacity>
@@ -118,12 +104,17 @@ export default function Orders() {
 
             <Modal visible={modalVisible} onRequestClose={() => setModalVisible(false)}>
                 <View style={styles.modalContainer}>
+                    <TouchableOpacity onPress={() => {
+                        setModalVisible(false);
+                    }}>
+                        <Text>Fechar</Text>
+                    </TouchableOpacity>
                     <ScrollView style={styles.modalContent}>
                         <View style={{ gap: 10 }}>
                             <View style={styles.userInfo}>
-                                <Image source={{ uri: currentUser?.avatar_url }} style={styles.userProfilePhoto} />
+                                <Image source={{ uri: currentOrder?.owner_avatar}} style={styles.userProfilePhoto} />
                                 <View>
-                                    <Text style={styles.userName}>{currentUser?.name}</Text>
+                                    <Text style={styles.userName}>{currentOrder?.owner_name}</Text>
                                     <Text>{currentOrder?.phone_number}</Text>
                                     <Text>{currentOrder?.created_at && new Date(currentOrder.created_at).toLocaleDateString()}</Text>
                                 </View>
@@ -167,16 +158,16 @@ export default function Orders() {
                                     )}
                                     horizontal
                                     style={{ marginBottom: 10 }}
-                                    contentContainerStyle={{ gap: 10, marginTop: 10}}
+                                    contentContainerStyle={{ gap: 10, marginTop: 10 }}
                                     showsHorizontalScrollIndicator={false}
                                 />
                             </View>
                         </View>
 
                     </ScrollView>
-                        <View style={styles.modalFooter}>
-                            <Button text="Atender pedido" isPrimary onClick={() => void (0)} />
-                        </View>
+                    <View style={styles.modalFooter}>
+                        <Button text="Atender pedido" isPrimary onClick={() => void (0)} />
+                    </View>
                 </View>
             </Modal>
 

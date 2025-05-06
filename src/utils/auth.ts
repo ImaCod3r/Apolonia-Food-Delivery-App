@@ -35,7 +35,7 @@ async function signInWithEmail(email: string, password: string) {
     return data
 }
 
-async function getcurrentUser() {
+async function getCurrentUser() {
     const userId = await getUserId();
 
     const { data, error } = await supabase
@@ -73,4 +73,4 @@ async function logout() {
 }
 
 
-export { signUpWithProfile, signInWithEmail,  getcurrentUser, getUserId, logout };
+export { signUpWithProfile, signInWithEmail,  getCurrentUser as getcurrentUser, getUserId, logout };

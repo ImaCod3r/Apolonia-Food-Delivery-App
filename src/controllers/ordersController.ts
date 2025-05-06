@@ -1,7 +1,7 @@
 import { supabase } from "@/utils/supabase";
 
 export class OrdersController {
-    static async createOrder(userId: string, contact: string, paymentMethod: string, latitude: number, longitude: number, cart_items: string) {
+    static async createOrder(userId: string, contact: string, paymentMethod: string, latitude: number, longitude: number, cart_items: string, owner_name: string, owner_avatar: string) {
         try {
             const { data, error } = await supabase
                 .from('orders')
@@ -12,7 +12,9 @@ export class OrdersController {
                         payment_method: paymentMethod,
                         latitude: latitude,
                         longitude: longitude,
-                        cart_items: cart_items
+                        cart_items: cart_items,
+                        owner_name: owner_name,
+                        owner_avatar: owner_avatar
                     }
                 ])
                 .select('*')
