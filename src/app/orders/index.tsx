@@ -82,28 +82,27 @@ export default function Orders() {
                                     while (!item.cart_items) {
                                         await new Promise((resolve) => setTimeout(resolve, 100));
                                     }
+
                                     let productsList = [];
-
-                                    try{
-                                        const userFetched = await fetchUser(item);
-                                        setCurrentUser(userFetched)
-                                    } catch(error) {
-
-                                    }
 
                                     for (let i of JSON.parse(item.cart_items || "[]")) {
                                         console.log(i);
                                         try {
                                             const productInfo = await fetchMatchedProduct(i.product_id);
+                                            const user = fetchUser(item);
+                                            setCurrentUser(user);
                                             productsList.push(productInfo);
                                         } catch (error) {
                                             throw error;
                                         }
                                     }
-                                    
+
                                     setProducts(productsList);
                                     setModalVisible(true);
                                 };
+
+                                
+
                                 waitForCartToLoad();
                             }}
                         >

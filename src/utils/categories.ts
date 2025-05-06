@@ -12,9 +12,5 @@ export const categories = [
     {
         name: "Sobremesas",
         icon: "cake" as keyof typeof MaterialIcons.glyphMap
-    },
-    {
-        name: "Lanches",
-        icon: "fastfood" as keyof typeof MaterialIcons.glyphMap
     }
 ] 

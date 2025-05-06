@@ -5,15 +5,15 @@ export const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 20,
-        justifyContent: 'space-between',
-        alignItems: 'center',
         backgroundColor: COLORS.white,
+        justifyContent: 'space-between',
+        alignItems: "center"
     },
-    header: {   
-        flexDirection: 'row',
-        alignSelf: 'flex-start',
-        gap: 5,
-        marginBottom: 10
+    header: {
+        flexDirection: "row",
+        width: "100%",
+        marginBottom: 10,
+        alignItems: "center"
     },
     heading: {
         fontSize: 20,

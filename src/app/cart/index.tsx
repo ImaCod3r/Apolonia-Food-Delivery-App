@@ -25,7 +25,7 @@ export default function Cart() {
             CartsController.getCartItemsByUserId(userId).then((data) => {
                 setCartItems(data);
             });
-            
+
         } catch (error) {
             Alert.alert('Erro', 'Não foi possível carregar os itens do carrinho.');
         }
@@ -52,6 +52,7 @@ export default function Cart() {
                 <Back />
                 <Text style={styles.heading}>Carrinho</Text>
             </View>
+
             <FlatList
                 data={cartItems}
                 renderItem={({ item }) => (
@@ -65,18 +66,18 @@ export default function Cart() {
                     <Text>Total</Text>
                     <Text style={styles.totalPrice}>{totalPrice}</Text>
                 </View>
-                <Button text="Confirmar" isPrimary onClick={() => { 
-                    if(cartItems.length === 0) {
+                <Button text="Confirmar" isPrimary onClick={() => {
+                    if (cartItems.length === 0) {
                         Alert.alert('Carrinho vazio', 'Adicione itens ao carrinho antes de prosseguir.');
                         return;
                     }
 
                     router.push({
-                         pathname: '/ordering', 
-                         params: { cartItems: JSON.stringify(cartItems) }
+                        pathname: '/ordering',
+                        params: { cartItems: JSON.stringify(cartItems) }
                     })
-                    
-                }}/>
+
+                }} />
             </View>
         </View>
     )
