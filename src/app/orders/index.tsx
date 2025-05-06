@@ -7,14 +7,12 @@ import { Back } from "@/components/back";
 import { Button } from "@/components/button";
 
 import { OrdersController } from "@/controllers/ordersController";
-import { UsersController } from "@/controllers/usersController";
 import { ProductsController } from "@/controllers/productsController";
 
 export default function Orders() {
     const [modalVisible, setModalVisible] = useState(false);
     const [orders, setOrders] = useState<any[] | null>(null);
 
-    const [users, setUsers] = useState<any[]>([])
     const [currentOrder, setCurrentOrder] = useState<any | undefined>(undefined);
     const [products, setProducts] = useState<any[]>([]);
 
@@ -44,9 +42,16 @@ export default function Orders() {
         }
     }
 
+    const rejectOrder = async (orderId: number) => {
+        try {
+            await OrdersController.UpdateOrderStatus(orderId, "rejeitado");
+        } catch (error) {
+            throw error;
+        }
+    }
+
     useEffect(() => {
         fetchOrders();
-        console.log(users);
     }, []);
 
     return (
@@ -181,8 +186,15 @@ export default function Orders() {
                             }).catch((error) => {
                                 Alert.alert("Não foi possível aceitar pedido!", "Tente novamente.");
                             })
-                        }}/>
-                        <Button text="Recusar pedido" isPrimary={false} onClick={() => void (0)} />
+                        }} />
+                        <Button text="Recusar pedido" isPrimary={false} onClick={() => {
+                            rejectOrder(currentOrder?.id).then(() => {
+                                Alert.alert("Sucesso!", `O pedido "${currentOrder?.id}" foi rejeitado.`)
+                                setModalVisible(false);
+                            }).catch((error) => {
+                                Alert.alert("Não foi possível rejeitar pedido!", "Tente novamente.");
+                            })
+                        }} />
                     </View>
                 </View>
             </Modal>
