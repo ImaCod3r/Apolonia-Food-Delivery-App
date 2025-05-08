@@ -5,7 +5,6 @@ import { styles } from "./styles";
 
 import { COLORS } from "@/styles/colors";
 
-import { ProductsController } from "@/controllers/productsController";
 import { CartsController } from "@/controllers/cartsController";
 
 type Props = {
