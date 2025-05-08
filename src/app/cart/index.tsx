@@ -41,10 +41,18 @@ export default function Cart() {
 
     function calculateTotalPrice(cartItems: any[]) {
         const total = cartItems.reduce((sum, item) => {
-            return sum + item.price * item.quantity; // Assuming each item has a price and quantity property
+            return sum + item.price * item.quantity;
         }, 0);
         setTotalPrice(total);
     }
+
+    const handleQuantityChange = (productId: string, newQuantity: number) => {
+        const updatedCartItems = cartItems.map((item) =>
+            item.product_id === productId ? { ...item, quantity: newQuantity } : item
+        );
+        setCartItems(updatedCartItems);
+        calculateTotalPrice(updatedCartItems); // Atualiza o preço total
+    };
 
     return (
         <View style={styles.container}>
@@ -56,7 +64,7 @@ export default function Cart() {
             <FlatList
                 data={cartItems}
                 renderItem={({ item }) => (
-                    <CartItem item={item} />
+                    <CartItem item={item} onQuantityChange={handleQuantityChange} />
                 )}
                 contentContainerStyle={styles.cartList}
             />
@@ -75,10 +83,10 @@ export default function Cart() {
                     router.push({
                         pathname: '/ordering',
                         params: { cartItems: JSON.stringify(cartItems) }
-                    })
+                    });
 
                 }} />
             </View>
         </View>
-    )
+    );
 }

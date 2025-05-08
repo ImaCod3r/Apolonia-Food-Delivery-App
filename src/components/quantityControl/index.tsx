@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity } from "react-native";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import { styles } from "./styles";
 
@@ -8,16 +8,18 @@ import { COLORS } from "@/styles/colors";
 import { CartsController } from "@/controllers/cartsController";
 
 type Props = {
-    item: any
+    item: any;
+    onQuantityChange: (productId: string, newQuantity: number) => void; // Callback para notificar mudanças
 };
 
-export function QuantityControl({ item }: Props) {
+export function QuantityControl({ item, onQuantityChange }: Props) {
     const [quantity, setQuantity] = useState(item.quantity);
 
     const updateQuantity = async (newQuantity: number) => {
         try {
             setQuantity(newQuantity);
             await CartsController.updateItemQuantity(item.product_id, newQuantity);
+            onQuantityChange(item.product_id, newQuantity); // Notifica a mudança
         } catch (error) {
             console.error("Error updating quantity:", error);
         }
