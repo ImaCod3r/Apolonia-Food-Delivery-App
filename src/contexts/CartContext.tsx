@@ -5,6 +5,7 @@ import { getUserId } from "@/utils/auth";
 type CartContextType = {
     cartItemsQuantity: number;
     setCartItemsQuantity: (quantity: number) => void;
+    refreshCartQuantity: () => Promise<void>;
 };
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -12,25 +13,25 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export const CartProvider = ({ children }: { children: ReactNode }) => {
     const [cartItemsQuantity, setCartItemsQuantity] = useState<number>(0);
 
-    useEffect(() => {
-        const loadCartItems = async () => {
-            try {
-                const userId = await getUserId();
-                if (userId) {
-                    const cartItems = await CartsController.getCartItemsByUserId(userId);
-                    const totalQuantity = cartItems.reduce((sum: number, item: any) => sum + item.quantity, 0);
-                    setCartItemsQuantity(totalQuantity);
-                }
-            } catch (error) {
-                console.error("Erro ao carregar itens do carrinho:", error);
+    const refreshCartQuantity = async () => {
+        try {
+            const userId = await getUserId();
+            if (userId) {
+                const cartItems = await CartsController.getCartItemsByUserId(userId);
+                const totalQuantity = cartItems.reduce((sum: number, item: any) => sum + item.quantity, 0);
+                setCartItemsQuantity(totalQuantity);
             }
-        };
+        } catch (error) {
+            console.error("Erro ao atualizar a quantidade de itens do carrinho:", error);
+        }
+    };
 
-        loadCartItems();
+    useEffect(() => {
+        refreshCartQuantity();
     }, []);
 
     return (
-        <CartContext.Provider value={{ cartItemsQuantity, setCartItemsQuantity }}>
+        <CartContext.Provider value={{ cartItemsQuantity, setCartItemsQuantity, refreshCartQuantity }}>
             {children}
         </CartContext.Provider>
     );

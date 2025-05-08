@@ -9,10 +9,12 @@ import { Button } from "@/components/button";
 
 import { CartsController } from "@/controllers/cartsController";
 import { getUserId } from "@/utils/auth";
+import { useCart } from "@/contexts/CartContext";
 
 export default function Cart() {
     const [cartItems, setCartItems] = useState<{ product_id: string; price: number; quantity: number }[]>([]);
     const [totalPrice, setTotalPrice] = useState<number>(0);
+    const { refreshCartQuantity } = useCart();
 
     const fetchCartData = async () => {
         try {
@@ -54,10 +56,11 @@ export default function Cart() {
         calculateTotalPrice(updatedCartItems); // Atualiza o preço total
     };
 
-    const handleItemRemove = (productId: string) => {
+    const handleItemRemove = async (productId: string) => {
         const updatedCartItems = cartItems.filter((item) => item.product_id !== productId);
         setCartItems(updatedCartItems);
         calculateTotalPrice(updatedCartItems); // Atualiza o preço total
+        await refreshCartQuantity(); // Atualiza a quantidade global
     };
 
     return (

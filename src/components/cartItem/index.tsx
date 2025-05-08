@@ -8,6 +8,7 @@ import { QuantityControl } from "@/components/quantityControl";
 import { ProductsController } from "@/controllers/productsController";
 import { CartsController } from "@/controllers/cartsController";
 import { getUserId } from "@/utils/auth";
+import { useCart } from "@/contexts/CartContext";
 
 type Props = {
     item: any;
@@ -17,6 +18,7 @@ type Props = {
 
 export function CartItem({ item, onQuantityChange, onItemRemove }: Props) {
     const [currentProduct, setCurrentProduct] = useState<any>({});
+    const { refreshCartQuantity } = useCart();
 
     useEffect(() => {
         ProductsController.getProductById(item.product_id).then((product) => {
@@ -29,7 +31,8 @@ export function CartItem({ item, onQuantityChange, onItemRemove }: Props) {
         try {
             const userId = await getUserId();
             await CartsController.removeItemFromCart(userId, item.product_id);
-            onItemRemove(item.product_id); // Notifica o componente pai para atualizar a lista
+            onItemRemove(item.product_id); // Atualiza a lista local
+            await refreshCartQuantity(); // Atualiza a quantidade global
         } catch (error) {
             Alert.alert("Erro", "Não foi possível remover o item do carrinho.");
         }
