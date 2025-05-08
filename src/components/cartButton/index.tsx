@@ -3,31 +3,10 @@ import { router } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
 import { COLORS } from "@/styles/colors";
 import { styles } from "./styles";
-import { useEffect, useState } from "react";
-import { CartsController } from "@/controllers/cartsController";
-import { getUserId } from "@/utils/auth";
+import { useCart } from "@/contexts/CartContext";
 
 export function CartButton() {
-    const [cartItemsQuantity, setCartItemsQuantity] = useState<number>(0);
-
-    const loadCartData = async () => {
-        try {
-            const userId = await getUserId();
-            if (userId) {
-                const cartData = await CartsController.getCartItemsByUserId(userId);
-                setCartItemsQuantity(cartData.length);
-            }
-        } catch (error) {
-            if ((error as { code?: string }).code === "PGRST116") {
-                return;
-            }
-            console.error("Error loading cart data:", error);
-        }
-    };
-
-    useEffect(() => {
-        loadCartData();
-    }, []);
+    const { cartItemsQuantity } = useCart();
 
     return (
         <TouchableOpacity onPress={() => router.navigate('/cart')} >

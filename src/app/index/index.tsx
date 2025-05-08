@@ -8,7 +8,7 @@ import { SearchBar } from "@/components/searchBar";
 import { Menu } from "@/components/menu";
 import { router } from "expo-router";
 
-import { getcurrentUser, getUserId } from "@/utils/auth";
+import { getcurrentUser } from "@/utils/auth";
 import { ProductsController } from "@/controllers/productsController";
 
 export default function Index() {
