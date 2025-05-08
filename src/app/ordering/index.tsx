@@ -1,4 +1,4 @@
-import { View, Text, Modal, TouchableOpacity, Alert } from "react-native";
+import { View, Text, Modal, TouchableOpacity, Alert, Keyboard } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { Picker } from '@react-native-picker/picker';
 import { router, useLocalSearchParams } from "expo-router";
@@ -131,14 +131,21 @@ export default function Ordering() {
                         <Text style={styles.label}>Sua localização</Text>
                         <Input value={`${location?.coords.latitude}, ${location?.coords.longitude}`} />
                     </View>
-                    <View style={styles.inputContainer}>
-                        <Text style={styles.label}>Informe seu contacto</Text>
-                        <Input placeholder="923 000 000"
-                            keyboardType="phone-pad"
-                            onChangeText={(text) => {
-                                setContact(text);
-                            }} />
-                    </View>
+                    <TouchableOpacity 
+                        activeOpacity={1} 
+                        onPress={() => Keyboard.dismiss()} 
+                        style={{ flex: 1 }}>
+                        <View style={styles.inputContainer}>
+                            <Text style={styles.label}>Informe seu contacto</Text>
+                            <Input 
+                                placeholder="923 000 000"
+                                keyboardType="phone-pad"
+                                onChangeText={(text) => {
+                                    setContact(text);
+                                }} 
+                            />
+                        </View>
+                    </TouchableOpacity>
 
                     <View style={styles.inputContainer}>
                         <Text style={styles.label}>Método de pagamento</Text>

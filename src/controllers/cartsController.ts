@@ -97,4 +97,29 @@ export class CartsController {
             throw error;
         }
     }
+
+    static async removeItemFromCart(userId: string, productId: string) {
+        try {
+            const { data, error } = await supabase
+                .from('carts')
+                .select('items')
+                .eq('user_id', userId)
+                .single();
+
+            if (error) throw error;
+
+            let items = JSON.parse(data.items);
+            items = items.filter((item: any) => item.product_id !== productId);
+
+            const { error: updateError } = await supabase
+                .from('carts')
+                .update({ items: JSON.stringify(items) })
+                .eq('user_id', userId);
+
+            if (updateError) throw updateError;
+        } catch (error) {
+            console.error("Error removing item from cart:", error);
+            throw error;
+        }
+    }
 }

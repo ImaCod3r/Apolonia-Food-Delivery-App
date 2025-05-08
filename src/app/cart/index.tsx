@@ -54,6 +54,12 @@ export default function Cart() {
         calculateTotalPrice(updatedCartItems); // Atualiza o preço total
     };
 
+    const handleItemRemove = (productId: string) => {
+        const updatedCartItems = cartItems.filter((item) => item.product_id !== productId);
+        setCartItems(updatedCartItems);
+        calculateTotalPrice(updatedCartItems); // Atualiza o preço total
+    };
+
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -64,7 +70,11 @@ export default function Cart() {
             <FlatList
                 data={cartItems}
                 renderItem={({ item }) => (
-                    <CartItem item={item} onQuantityChange={handleQuantityChange} />
+                    <CartItem
+                        item={item}
+                        onQuantityChange={handleQuantityChange}
+                        onItemRemove={handleItemRemove} // Passa a função de remoção
+                    />
                 )}
                 contentContainerStyle={styles.cartList}
             />
