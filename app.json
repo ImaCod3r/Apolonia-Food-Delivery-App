@@ -14,7 +14,10 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSUserNotificationUsageDescription": "Este app usa notificações para alertá-lo sobre atualizações importantes."
+      }
     },
     "android": {
       "adaptiveIcon": {

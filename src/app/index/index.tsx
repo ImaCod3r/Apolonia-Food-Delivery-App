@@ -11,6 +11,10 @@ import { router } from "expo-router";
 import { getcurrentUser } from "@/utils/auth";
 import { ProductsController } from "@/controllers/productsController";
 
+import { setNotificationsHandler, registerForPushNotifications } from "@/utils/notifications";
+
+setNotificationsHandler();
+
 export default function Index() {
     const [currentUser, setCurrentUser] = useState<{ name: string; email: string, avatar_url: string, isadmin: boolean } | null>(null);
     const [products, setProducts] = useState<any>([]);
@@ -40,6 +44,10 @@ export default function Index() {
         getProducts();
     }, []);
 
+
+    useEffect(() => {
+        registerForPushNotifications();
+    }, [])
     return (
         <SafeAreaView style={{flex: 1}}>
             <View style={styles.container}>
