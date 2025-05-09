@@ -44,10 +44,10 @@ export default function Index() {
         getProducts();
     }, []);
 
-
     useEffect(() => {
         registerForPushNotifications();
     }, [])
+
     return (
         <SafeAreaView style={{flex: 1}}>
             <View style={styles.container}>
