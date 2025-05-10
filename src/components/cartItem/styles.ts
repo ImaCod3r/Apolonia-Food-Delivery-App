@@ -18,7 +18,8 @@ export const styles = StyleSheet.create({
         gap: 10
     },
     itemName: {
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        width: 150
     },
     itemCategory: {
         fontSize: 12,

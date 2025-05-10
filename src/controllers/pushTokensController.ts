@@ -1,6 +1,6 @@
 import { supabase } from "@/utils/supabase";
 
-class PushTokensController {
+export class PushTokensController {
     static async savePushToken(user_id: string, token: string) {
         const { error: insertError } = await supabase
         .from('push_tokens')
@@ -9,6 +9,8 @@ class PushTokensController {
             push_token: token
         }]);
 
-        if(insertError) throw insertError;
+        if((insertError as any)["code"] !== "23505") {
+            throw insertError;
+        }
     }
 }

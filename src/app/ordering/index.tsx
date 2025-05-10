@@ -26,6 +26,8 @@ export default function Ordering() {
     const [location, setLocation] = useState<LocationObject | null>(null);
     const [modalVisible, setModalVisible] = useState(false);
     const mapRef = useRef<MapView>(null);
+    const [interval, setIntervalZero] =  useState<number>(1000);
+    const [counter, setCounter] = useState<number>(10);
 
     const requestLocationPermissions = async () => {
         const { granted } = await requestForegroundPermissionsAsync();
@@ -46,7 +48,7 @@ export default function Ordering() {
     useEffect(() => {
         watchPositionAsync({
             accuracy: LocationAccuracy.Highest,
-            timeInterval: 1000,
+            timeInterval: interval,
             distanceInterval: 1
         },
             (response) => {
@@ -59,8 +61,15 @@ export default function Ordering() {
     }, []);
 
     useEffect(() => {
-        setModalVisible(true);
-    }, [])
+        if (location) {
+            setCounter(counter - 1);
+            if(counter <= 0){
+                setCounter(0)
+                setIntervalZero(0);
+                setModalVisible(true);
+            }
+        }
+    }, [location]);
 
     const verifyFields = (contact: string, paymentMethod: string) => {
         const isContactValid = contact.trim() !== '' && contact.length === 9;
@@ -172,14 +181,6 @@ export default function Ordering() {
                     </View>
                 </View>
             </Modal>
-
-            <TouchableOpacity
-                onPress={() => setModalVisible(!modalVisible)}
-                style={styles.openModalButton}>
-                <Text style={styles.openModalButtonText}>
-                    Adicionar informações de entrega
-                </Text>
-            </TouchableOpacity>
 
             {location && (
                 <MapView

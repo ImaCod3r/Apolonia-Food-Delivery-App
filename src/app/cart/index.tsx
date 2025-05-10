@@ -35,7 +35,7 @@ export default function Cart() {
 
     useEffect(() => {
         fetchCartData();
-    }, []);
+    }, [cartItems]);
 
     useEffect(() => {
         calculateTotalPrice(cartItems);
@@ -60,7 +60,7 @@ export default function Cart() {
         const updatedCartItems = cartItems.filter((item) => item.product_id !== productId);
         setCartItems(updatedCartItems);
         calculateTotalPrice(updatedCartItems); // Atualiza o preço total
-        await refreshCartQuantity(); // Atualiza a quantidade global
+        await refreshCartQuantity(); // Atualiza a quantidade globalr
     };
 
     return (

@@ -10,13 +10,14 @@ import { router } from "expo-router";
 
 import { getcurrentUser } from "@/utils/auth";
 import { ProductsController } from "@/controllers/productsController";
+import { PushTokensController } from "@/controllers/pushTokensController";
 
 import { setNotificationsHandler, registerForPushNotifications } from "@/utils/notifications";
 
 setNotificationsHandler();
 
 export default function Index() {
-    const [currentUser, setCurrentUser] = useState<{ name: string; email: string, avatar_url: string, isadmin: boolean } | null>(null);
+    const [currentUser, setCurrentUser] = useState<{ id: string, name: string; email: string, avatar_url: string, isadmin: boolean } | null>(null);
     const [products, setProducts] = useState<any>([]);
 
     const loadUser = async () => {
@@ -37,42 +38,52 @@ export default function Index() {
         }
     }
 
+    const handlePushTokenSaving = async () => {
+        try {
+            const token = await registerForPushNotifications();
+            if (token) {
+                await PushTokensController.savePushToken(currentUser?.id as string, token);
+            }
+        } catch (error) {
+            // console.error(error);
+            // Alert.alert("Erro", "Não foi possível salvar o push token.")
+        }
+    }
+
     useEffect(() => {
         // Load user data when the component mounts
-        loadUser();
+        loadUser().then(() => {
+            handlePushTokenSaving();
+        })
         // Load products data when the component mounts
         getProducts();
     }, []);
 
-    useEffect(() => {
-        registerForPushNotifications();
-    }, [])
-
     return (
-        <SafeAreaView style={{flex: 1}}>
+        <SafeAreaView style={{ flex: 1 }}>
             <View style={styles.container}>
-            <View style={styles.header}>
-                <Image source={require('@/assets/logo.png')} style={styles.logo} />
+                <View style={styles.header}>
+                    <Image source={require('@/assets/logo.png')} style={styles.logo} />
 
-                <View style={styles.headerActions}>
-                    <CartButton />
+                    <View style={styles.headerActions}>
+                        <CartButton />
 
-                    {currentUser?.isadmin && (
-                        <TouchableOpacity style={styles.adminButton} onPress={() => router.push('/admin')}>
-                            <Text style={{color: '#fff'}}>Admin</Text>
+                        {currentUser?.isadmin && (
+                            <TouchableOpacity style={styles.adminButton} onPress={() => router.push('/admin')}>
+                                <Text style={{ color: '#fff' }}>Admin</Text>
+                            </TouchableOpacity>
+                        )}
+
+                        <TouchableOpacity onPress={() => router.navigate('/profile')}>
+                            <Image source={{ uri: currentUser?.avatar_url }} style={styles.profile} />
                         </TouchableOpacity>
-                    )}
+                    </View>
 
-                    <TouchableOpacity onPress={() => router.navigate('/profile')}>
-                        <Image source={{ uri: currentUser?.avatar_url }} style={styles.profile} />
-                    </TouchableOpacity>
                 </View>
 
-            </View>
+                <SearchBar icon="search" />
 
-            <SearchBar icon="search" />
-
-            <Menu data={products} />
+                <Menu data={products} />
             </View>
         </SafeAreaView>
     )

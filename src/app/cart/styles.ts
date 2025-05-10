@@ -20,7 +20,7 @@ export const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     cartList: {
-        gap: 10,
+        gap: 15,
         paddingBottom: 25
     },
     footer: {
