@@ -7,6 +7,10 @@ const styles = StyleSheet.create({
         padding: 20,
          backgroundColor: COLORS.white
     },
+    screenHeader: {
+        flexDirection: "row",
+        alignItems: "center"
+    },
     heading: {
         fontSize: 20,
         fontWeight: 'bold',

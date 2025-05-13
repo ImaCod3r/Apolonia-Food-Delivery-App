@@ -6,28 +6,13 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 20,
         backgroundColor: COLORS.white
-    },
+    }, 
     header: {
-        flexDirection: 'row',
-        alignItems: 'center'
+        flexDirection: "row",
+        alignItems: "center",
     },
     heading: {
-        fontWeight: 'bold',
-        fontSize: 18
-    },
-    tableHeader: {
-        borderBottomWidth: 2,
-        borderColor: COLORS.gray,
-        marginTop: 10
-    },
-    row: {
-        flexDirection: 'row',
-        paddingVertical: 10,
-        justifyContent: "space-between"
-    }, 
-    column: {
-        maxWidth: 80,
-        // minWidth: 80
+        fontWeight: "bold"
     },
     modalContainer: {
         flex: 1,

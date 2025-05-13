@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TouchableOpacity, Modal, Alert, FlatList } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, Modal, Alert, FlatList, StyleSheet } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { MaterialIcons } from '@expo/vector-icons';
 import { useEffect, useState } from 'react';
@@ -65,61 +65,55 @@ export default function Products() {
         getProducts();
     }, []);
 
+    const renderUser = ({ item }: { item: any }) => (
+        <TouchableOpacity style={tableStyles.row} 
+            onPress={() => { 
+                setSelectedProduct(item) 
+                setModalVisible(true)
+        }}>
+            <Text style={tableStyles.cell}>{item.name}</Text>
+            <Text style={tableStyles.cell}>{item.category}</Text>
+            <Text style={tableStyles.cell}>{item.price}</Text>
+        </TouchableOpacity>
+    );
+
     return (
         <View style={styles.container}>
-            <View>
+            <View style={styles.screenHeader}>
                 <Back />
                 <Text style={styles.heading}>Gerenciar Produtos</Text>
-                <Text>Adicione, edite ou remova produtos do cardápio.</Text>
             </View>
+            <Text>Adicione, edite ou remova produtos do cardápio.</Text>
 
-            <TouchableOpacity 
-                style={styles.addButton} 
+            <TouchableOpacity
+                style={styles.addButton}
                 onPress={() => {
-                setModalVisible(true);
-            }}>
+                    setModalVisible(true);
+                }}>
                 <MaterialIcons name="add" size={24} color="black" />
                 <Text>Adicionar Produto</Text>
             </TouchableOpacity>
 
-            {/* Cabeçalho */}
-            <View style={[styles.row, styles.header]}>
-                <Text style={styles.columnHeader}>Nome</Text>
-                <Text style={styles.columnHeader}>Preço</Text>
-                <Text style={styles.columnHeader}>Categoria</Text>
+            <View style={tableStyles.table}>
+                <View style={tableStyles.headerRow}>
+                    <Text style={tableStyles.headerCell}>Nome</Text>
+                    <Text style={tableStyles.headerCell}>Categoria</Text>
+                    <Text style={tableStyles.headerCell}>Preço</Text>
+                </View>
+                <FlatList
+                    data={products}
+                    renderItem={renderUser}
+                    keyExtractor={(item) => item.id.toString()}
+                />
             </View>
 
-            {/* Lista de produtos */}
-            <FlatList
-                data={products}
-                keyExtractor={(item) => item.id.toString()}
-                renderItem={({ item }) => (
-                    <TouchableOpacity
-                    style={styles.row} 
-                    onLongPress={() => handleDeleteProduct(item.id)}
-                    onPress={() => {
-                        setSelectedProduct(item);
-                        setProductName(item.name); 
-                        setProductPrice(item.price); 
-                        setProductCategory(item.category);
-                        setProductDescription(item.description);
-                        setProductImage(item.image_url); 
-                        setModalVisible(true); 
-                    }}>
-                        <Text>{item.name}</Text>
-                        <Text>{item.price}</Text>
-                        <Text>{item.category}</Text>
-                    </TouchableOpacity>
-                )
-            } />
-
-            < Modal visible={modalVisible} animationType="slide" transparent >
+            <Modal visible={modalVisible} animationType="slide" transparent >
                 <ScrollView style={styles.modalContainer}>
                     <View style={styles.modalContent}>
 
                         <View style={styles.inputGroup}>
                             <Text>Nome do produto</Text>
-                            <Input placeholder="Ex: Refrigerante" value={productName}
+                            <Input placeholder={selectedProduct?.name ? selectedProduct?.name : "Ex: Refrigerante"} value={productName}
                                 onChangeText={(value) => setProductName(value)} />
                         </View>
 
@@ -158,7 +152,7 @@ export default function Products() {
 
                         <View style={styles.inputGroup}>
                             <Text>Imagem do produto</Text>
-                            <ImageDisplayer currentItem={selectedProduct} onImageChange={(newImage) => setProductImage(newImage)}  />
+                            <ImageDisplayer currentItem={selectedProduct} onImageChange={(newImage) => setProductImage(newImage)} />
                         </View>
 
                     </View>
@@ -166,26 +160,26 @@ export default function Products() {
                 <View style={styles.actions}>
                     <TouchableOpacity style={styles.button} onPress={() => {
                         // Salvar lógica
-                        if(!selectedProduct?.id) {
+                        if (!selectedProduct?.id) {
                             ProductsController.createProduct(productName, productCategory, productDescription, productPrice, productImage)
-                            .then(() => {
-                                setModalVisible(false);
-                            }).catch(error => {
-                                Alert.alert('Error', error.message);
-                            }).finally(() => {
-                                Alert.alert('Sucesso', 'Produto cadastrado com sucesso!');
-                                getProducts();
-                            })
+                                .then(() => {
+                                    setModalVisible(false);
+                                }).catch(error => {
+                                    Alert.alert('Error', error.message);
+                                }).finally(() => {
+                                    Alert.alert('Sucesso', 'Produto cadastrado com sucesso!');
+                                    getProducts();
+                                })
                         } else {
                             ProductsController.updateProduct(selectedProduct.id, { name: productName, category: productCategory, description: productDescription, price: productPrice, image_url: productImage })
-                            .then(() => {
-                                setModalVisible(false);
-                            }).catch(error => {
-                                Alert.alert('Error', error.message);
-                            }).finally(() => {
-                                Alert.alert('Sucesso', 'Produto atualizado com sucesso!');
-                                getProducts();
-                            })
+                                .then(() => {
+                                    setModalVisible(false);
+                                }).catch(error => {
+                                    Alert.alert('Error', error.message);
+                                }).finally(() => {
+                                    Alert.alert('Sucesso', 'Produto atualizado com sucesso!');
+                                    getProducts();
+                                })
                         }
                     }}>
                         <Text style={styles.text}>Salvar</Text>
@@ -204,3 +198,34 @@ export default function Products() {
         </View >
     )
 }
+
+const tableStyles = StyleSheet.create({
+    table: {
+        marginTop: 20,
+        borderWidth: 1,
+        borderColor: "#ddd",
+        borderRadius: 5,
+        maxHeight: 300
+    },
+    headerRow: {
+        flexDirection: "row",
+        backgroundColor: "#f0f0f0",
+        padding: 10,
+    },
+    headerCell: {
+        flex: 1,
+        fontWeight: "bold",
+        textAlign: "center",
+    },
+    row: {
+        flexDirection: "row",
+        padding: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: "#ddd",
+        alignItems: "center"
+    },
+    cell: {
+        flex: 1,
+        textAlign: "center",
+    },
+});

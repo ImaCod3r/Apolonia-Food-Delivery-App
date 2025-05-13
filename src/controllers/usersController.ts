@@ -12,6 +12,15 @@ export class UsersController {
         return data;
     }
 
+    static async getAllUsers() {
+        const { data, error } = await supabase
+            .from('profiles')
+            .select('*');
+
+        if (error) throw error;
+        return data;
+    }
+
     static async createUser(id: any, name: string, email: string, password: string) {
         const { error: insertError } = await supabase
         .from('profiles').insert([{

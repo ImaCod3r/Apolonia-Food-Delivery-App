@@ -1,4 +1,4 @@
-import { ScrollView, View, Text, FlatList, TouchableOpacity, Modal, Alert, Image } from "react-native";
+import { ScrollView, View, Text, FlatList, TouchableOpacity, Modal, Alert, Image, StyleSheet } from "react-native";
 import { useState, useEffect } from "react";
 import MapView, { Marker } from "react-native-maps";
 import styles from "./styles";
@@ -54,6 +54,49 @@ export default function Orders() {
         fetchOrders();
     }, []);
 
+    interface Order {
+        id: number;
+        owner_name: string;
+        created_at: string;
+        status: string;
+        cart_items?: string;
+    }
+
+    const renderOrder = ({ item }: { item: any }) => (
+        <TouchableOpacity
+            style={tableStyles.row}
+            onPress={() => {
+                setCurrentOrder(item);
+
+                const waitForCartToLoad = async () => {
+                    while (!item.cart_items) {
+                        await new Promise((resolve) => setTimeout(resolve, 100));
+                    }
+
+                    let productsList = [];
+
+                    for (let i of JSON.parse(item.cart_items || "[]")) {
+                        try {
+                            const productInfo = await fetchMatchedProduct(i.product_id);
+                            productsList.push(productInfo);
+                        } catch (error) {
+                            throw error;
+                        }
+                    }
+
+                    setProducts(productsList);
+                    setModalVisible(true);
+                };
+
+                waitForCartToLoad();
+            }}>
+                {/* <Text style={tableStyles.cell}>{item.id}</Text> */}
+                <Text style={tableStyles.cell}>{item.owner_name}</Text>
+                <Text style={tableStyles.cell}>{item.created_at}</Text>
+                <Text style={tableStyles.cell}>{item.status}</Text>
+        </TouchableOpacity>
+    )
+
     return (
         <View style={styles.container}>
             <View style={styles.header}>
@@ -65,52 +108,16 @@ export default function Orders() {
                 Aqui você pode visualizar todos os pedidos realizados.
             </Text>
 
-            <View>
-                <View style={[styles.row, styles.tableHeader]}>
-                    <Text style={styles.column}>#</Text>
-                    <Text style={styles.column}>Nome</Text>
-                    <Text style={styles.column}>Data</Text>
-                    <Text style={styles.column}>status</Text>
+            <View style={tableStyles.table}>
+                <View style={tableStyles.headerRow}>
+                    {/* <Text style={tableStyles.headerCell}>#</Text> */}
+                    <Text style={tableStyles.headerCell}>Nome</Text>
+                    <Text style={tableStyles.headerCell}>Data</Text>
+                    <Text style={tableStyles.headerCell}>Estado</Text>
                 </View>
-
                 <FlatList
                     data={orders}
-                    renderItem={({ item }) => (
-                        <TouchableOpacity
-                            style={styles.row}
-                            onPress={() => {
-                                setCurrentOrder(item);
-
-                                const waitForCartToLoad = async () => {
-                                    while (!item.cart_items) {
-                                        await new Promise((resolve) => setTimeout(resolve, 100));
-                                    }
-
-                                    let productsList = [];
-
-                                    for (let i of JSON.parse(item.cart_items || "[]")) {
-                                        console.log(i);
-                                        try {
-                                            const productInfo = await fetchMatchedProduct(i.product_id);
-                                            productsList.push(productInfo);
-                                        } catch (error) {
-                                            throw error;
-                                        }
-                                    }
-
-                                    setProducts(productsList);
-                                    setModalVisible(true);
-                                };
-
-                                waitForCartToLoad();
-                            }}
-                        >
-                            <Text style={styles.column}>{item.id}</Text>
-                            <Text style={styles.column}>{item.owner_name}</Text>
-                            <Text style={styles.column}>{item.created_at}</Text>
-                            <Text style={styles.column}>{item.status}</Text>
-                        </TouchableOpacity>
-                    )}
+                    renderItem={renderOrder}
                     keyExtractor={(item) => item.id.toString()}
                 />
             </View>
@@ -199,6 +206,37 @@ export default function Orders() {
                 </View>
             </Modal>
 
-        </View>
+        </View >
     )
 }
+
+const tableStyles = StyleSheet.create({
+    table: {
+        marginTop: 20,
+        borderWidth: 1,
+        borderColor: "#ddd",
+        borderRadius: 5,
+        maxHeight: 300
+    },
+    headerRow: {
+        flexDirection: "row",
+        backgroundColor: "#f0f0f0",
+        padding: 10,
+    },
+    headerCell: {
+        flex: 1,
+        fontWeight: "bold",
+        textAlign: "center",
+    },
+    row: {
+        flexDirection: "row",
+        padding: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: "#ddd",
+        alignItems: "center"
+    },
+    cell: {
+        flex: 1,
+        textAlign: "center",
+    },
+});

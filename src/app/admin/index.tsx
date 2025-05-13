@@ -14,7 +14,7 @@ export default function Admin() {
             <View style={styles.linksContainer}>
                 <Link name="Pedidos" url="/orders" icon="book" />
                 <Link name="Cardápio" url="/products" icon="inventory" />
-                <Link name="Usuários" url="/products" icon="supervised-user-circle" />
+                <Link name="Usuários" url="/users" icon="supervised-user-circle" />
             </View>
 
             <Button text='Ir para o App' isPrimary={false} onClick={() => router.replace('/' as any)}/>
