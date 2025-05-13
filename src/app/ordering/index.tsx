@@ -1,7 +1,7 @@
 import { View, Text, Modal, TouchableOpacity, Alert, Keyboard } from "react-native";
+import { router, useLocalSearchParams } from "expo-router";
 import MapView, { Marker } from "react-native-maps";
 import { Picker } from '@react-native-picker/picker';
-import { router, useLocalSearchParams } from "expo-router";
 import { useState, useEffect, useRef } from "react";
 import styles from "./styles";
 
@@ -10,14 +10,14 @@ import { Button } from "@/components/button";
 
 import {
     requestForegroundPermissionsAsync,
-    getCurrentPositionAsync,
-    LocationObject,
     watchPositionAsync,
+    LocationObject,
     LocationAccuracy
 } from "expo-location";
 
 import { OrdersController } from "@/controllers/ordersController";
-import { getUserId, getcurrentUser } from "@/utils/auth";
+import { getcurrentUser } from "@/utils/auth";
+import { Back } from "@/components/back";
 
 export default function Ordering() {
     const params = useLocalSearchParams();
@@ -26,50 +26,40 @@ export default function Ordering() {
     const [location, setLocation] = useState<LocationObject | null>(null);
     const [modalVisible, setModalVisible] = useState(false);
     const mapRef = useRef<MapView>(null);
-    const [interval, setIntervalZero] =  useState<number>(1000);
-    const [counter, setCounter] = useState<number>(10);
 
     const requestLocationPermissions = async () => {
         const { granted } = await requestForegroundPermissionsAsync();
 
         if (granted) {
-            const currentLocation = await getCurrentPositionAsync();
-            setLocation(currentLocation);
+            await watchPositionAsync(
+                {
+                    accuracy: LocationAccuracy.BestForNavigation, // Maior precisão possível
+                    timeInterval: 1000, // Atualizações a cada 1 segundo
+                    distanceInterval: 0.5, // Atualizações a cada 0.5 metros
+                },
+                (newLocation) => {
+                    setLocation(newLocation);
+                    mapRef.current?.animateCamera({
+                        center: {
+                            latitude: newLocation.coords.latitude,
+                            longitude: newLocation.coords.longitude,
+                        },
+                        pitch: 70,
+                        heading: newLocation.coords.heading ?? 0,
+                    });
+                }
+            );
         } else {
-            Alert.alert("Permissão de localização negada", "Por favor, ative a permissão de localização nas configurações do aplicativo.");
-            return;
+            Alert.alert(
+                "Permissão de localização negada",
+                "Por favor, ative a permissão de localização nas configurações do aplicativo."
+            );
         }
-    }
+    };
 
     useEffect(() => {
         requestLocationPermissions();
     }, []);
-
-    useEffect(() => {
-        watchPositionAsync({
-            accuracy: LocationAccuracy.Highest,
-            timeInterval: interval,
-            distanceInterval: 1
-        },
-            (response) => {
-                setLocation(response);
-                mapRef.current?.animateCamera({
-                    pitch: 70,
-                    center: response.coords
-                })
-            })
-    }, []);
-
-    useEffect(() => {
-        if (location) {
-            setCounter(counter - 1);
-            if(counter <= 0){
-                setCounter(0)
-                setIntervalZero(0);
-                setModalVisible(true);
-            }
-        }
-    }, [location]);
 
     const verifyFields = (contact: string, paymentMethod: string) => {
         const isContactValid = contact.trim() !== '' && contact.length === 9;
@@ -86,16 +76,7 @@ export default function Ordering() {
         }
 
         return true;
-    }
-
-    const fetchUser= async () => {
-        try {
-            const user = await getcurrentUser();
-            return user;
-        } catch (error) {
-            Alert.alert("Erro", "Não foi possível buscar os dados do usuário.");
-        }
-    }
+    };
 
     const handleCreateOrder = async () => {
         if (!location) {
@@ -112,46 +93,61 @@ export default function Ordering() {
         const items = params.cartItems;
 
         try {
-            fetchUser().then((user) => {
-                if (user) {
-                    const userLocation = { latitude: location.coords.latitude, longitude: location.coords.longitude }
-                    OrdersController.createOrder(user.id, contact, paymentMethod, userLocation.latitude, userLocation.longitude, items as string, user.name, user.avatar_url);
-                } else {
-                    Alert.alert("Erro", "ID do usuário não encontrado.");
-                }
-            })
+            const user = await getcurrentUser();
+            if (user) {
+                const userLocation = { latitude: location.coords.latitude, longitude: location.coords.longitude };
+                await OrdersController.createOrder(
+                    user.id,
+                    contact,
+                    paymentMethod,
+                    userLocation.latitude,
+                    userLocation.longitude,
+                    items as string,
+                    user.name,
+                    user.avatar_url
+                );
+                Alert.alert("Sucesso", "Pedido realizado com sucesso!");
+                setModalVisible(false);
+                router.push("/" as any);
+            } else {
+                Alert.alert("Erro", "ID do usuário não encontrado.");
+            }
         } catch (error) {
-            throw error;
+            Alert.alert("Erro", "Não foi possível criar o pedido.");
         }
-
-        return true;
-    }
+    };
 
     return (
         <View style={styles.container}>
-            <Modal animationType="slide" transparent={true} visible={modalVisible} onRequestClose={() => {
-                setModalVisible(false);
-            }}>
+           <View style={{ position: "absolute", top: 10, left: 10, zIndex: 10, backgroundColor: "#fff", borderRadius: 50 }}>
+                <Back />
+           </View>
+
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => setModalVisible(false)}
+            >
                 <View style={styles.modalContainer}>
                     <View style={styles.header}>
                         <Text style={styles.title}>Informações de entrega</Text>
                     </View>
                     <View style={styles.inputContainer}>
                         <Text style={styles.label}>Sua localização</Text>
-                        <Input value={`${location?.coords.latitude}, ${location?.coords.longitude}`} />
+                        <Input value={`${location?.coords.latitude}, ${location?.coords.longitude}`} editable={false} />
                     </View>
-                    <TouchableOpacity 
-                        activeOpacity={1} 
-                        onPress={() => Keyboard.dismiss()} 
-                        style={{ flex: 1 }}>
+                    <TouchableOpacity
+                        activeOpacity={1}
+                        onPress={() => Keyboard.dismiss()}
+                        style={{ flex: 1 }}
+                    >
                         <View style={styles.inputContainer}>
                             <Text style={styles.label}>Informe seu contacto</Text>
-                            <Input 
+                            <Input
                                 placeholder="923 000 000"
                                 keyboardType="phone-pad"
-                                onChangeText={(text) => {
-                                    setContact(text);
-                                }} 
+                                onChangeText={(text) => setContact(text)}
                             />
                         </View>
                     </TouchableOpacity>
@@ -161,7 +157,8 @@ export default function Ordering() {
                         <View style={styles.select}>
                             <Picker
                                 onValueChange={(itemValue) => setPaymentMethod(itemValue)}
-                                selectedValue={paymentMethod} >
+                                selectedValue={paymentMethod}
+                            >
                                 <Picker.Item label="TPA" value="TPA" color="#000" />
                                 <Picker.Item label="Dinheiro" value="Dinheiro" color="#000" />
                             </Picker>
@@ -169,15 +166,11 @@ export default function Ordering() {
                     </View>
 
                     <View style={styles.inputContainer}>
-                        <Button text="Pedir" onClick={() => {
-                            handleCreateOrder().then((result) => {
-                                if(result) {
-                                    Alert.alert("Sucesso", "Pedido realizado com sucesso!");
-                                    setModalVisible(false);
-                                    router.push("/" as any);
-                                }
-                            })
-                        }} isPrimary />
+                        <Button
+                            text="Pedir"
+                            onClick={handleCreateOrder}
+                            isPrimary
+                        />
                     </View>
                 </View>
             </Modal>
@@ -190,8 +183,9 @@ export default function Ordering() {
                         latitude: location.coords.latitude,
                         longitude: location.coords.longitude,
                         latitudeDelta: 0.005,
-                        longitudeDelta: 0.005
-                    }}>
+                        longitudeDelta: 0.005,
+                    }}
+                >
                     <Marker
                         coordinate={{
                             latitude: location.coords.latitude,
@@ -201,5 +195,5 @@ export default function Ordering() {
                 </MapView>
             )}
         </View>
-    )
+    );
 }
