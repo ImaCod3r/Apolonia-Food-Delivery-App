@@ -58,7 +58,9 @@ export default function Ordering() {
     };
 
     useEffect(() => {
-        requestLocationPermissions();
+        requestLocationPermissions().then(() => {
+            setModalVisible(true);
+        })
     }, []);
 
     const verifyFields = (contact: string, paymentMethod: string) => {

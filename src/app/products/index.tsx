@@ -68,8 +68,8 @@ export default function Products() {
     const renderUser = ({ item }: { item: any }) => (
         <TouchableOpacity style={tableStyles.row} 
             onPress={() => { 
-                setSelectedProduct(item) 
-                setModalVisible(true)
+                setSelectedProduct(item);
+                setModalVisible(true);
         }}>
             <Text style={tableStyles.cell}>{item.name}</Text>
             <Text style={tableStyles.cell}>{item.category}</Text>
@@ -113,13 +113,13 @@ export default function Products() {
 
                         <View style={styles.inputGroup}>
                             <Text>Nome do produto</Text>
-                            <Input placeholder={selectedProduct?.name ? selectedProduct?.name : "Ex: Refrigerante"} value={productName}
+                            <Input placeholder={selectedProduct?.name ? selectedProduct?.name : "Ex: Refrigerante"} value={productName || selectedProduct?.name}
                                 onChangeText={(value) => setProductName(value)} />
                         </View>
 
                         <View style={styles.inputGroup}>
                             <Text>Preço do produto</Text>
-                            <Input placeholder="AOA 0,00" keyboardType="numeric" value={productPrice.toString()}
+                            <Input placeholder="AOA 0,00" keyboardType="numeric" value={productPrice.toString() || selectedProduct?.price}
                                 onChangeText={(value) => setProductPrice(+value)} />
                         </View>
 
@@ -146,7 +146,7 @@ export default function Products() {
                                 placeholder="Ex: Refrigerante de 2L"
                                 numberOfLines={4}
                                 multiline
-                                value={productDescription}
+                                value={productDescription || selectedProduct?.description}
                                 onChangeText={(value) => setProductDescription(value)} />
                         </View>
 
