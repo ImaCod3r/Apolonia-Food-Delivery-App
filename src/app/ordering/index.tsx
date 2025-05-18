@@ -160,6 +160,7 @@ export default function Ordering() {
                                 placeholder="923 000 000"
                                 keyboardType="phone-pad"
                                 onChangeText={(text) => setContact(text)}
+                                value={contact}
                             />
                         </View>
                     </TouchableOpacity>
