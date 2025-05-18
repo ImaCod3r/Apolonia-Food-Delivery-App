@@ -10,10 +10,9 @@ const styles = StyleSheet.create({
     screenHeader: {
         flexDirection: "row",
         alignItems: "center",
-        justifyContent: "center"
     },
     heading: {
-        fontSize: 20,
+        fontSize: 16,
         fontWeight: 'bold',
     },
     header:{

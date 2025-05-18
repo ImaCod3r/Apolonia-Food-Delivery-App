@@ -65,8 +65,11 @@ export default function Products() {
         getProducts();
     }, []);
 
-    const renderUser = ({ item }: { item: any }) => (
+    const renderProduct = ({ item }: { item: any }) => (
         <TouchableOpacity style={tableStyles.row} 
+            onLongPress={() => {
+                handleDeleteProduct(item?.id);
+            }}
             onPress={() => { 
                 setSelectedProduct(item);
                 setModalVisible(true);
@@ -102,7 +105,7 @@ export default function Products() {
                 </View>
                 <FlatList
                     data={products}
-                    renderItem={renderUser}
+                    renderItem={renderProduct}
                     keyExtractor={(item) => item.id.toString()}
                 />
             </View>

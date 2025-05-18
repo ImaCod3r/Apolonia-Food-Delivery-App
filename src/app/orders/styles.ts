@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     },
     cardItem: {
         width: 160,
-        height: 240,
+        height: 250,
         justifyContent: "space-between",
         padding: 10,
         backgroundColor: COLORS.gray,

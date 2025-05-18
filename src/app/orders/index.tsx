@@ -8,6 +8,7 @@ import { Button } from "@/components/button";
 
 import { OrdersController } from "@/controllers/ordersController";
 import { ProductsController } from "@/controllers/productsController";
+import { MaterialIcons } from "@expo/vector-icons";
 
 export default function Orders() {
     const [modalVisible, setModalVisible] = useState(false);
@@ -52,7 +53,7 @@ export default function Orders() {
 
     useEffect(() => {
         fetchOrders();
-    }, []);
+    }, [orders]);
 
     interface Order {
         id: number;
@@ -90,9 +91,12 @@ export default function Orders() {
 
                 waitForCartToLoad();
             }}>
-                {/* <Text style={tableStyles.cell}>{item.id}</Text> */}
                 <Text style={tableStyles.cell}>{item.owner_name}</Text>
-                <Text style={tableStyles.cell}>{item.created_at}</Text>
+                <Text style={tableStyles.cell}>
+                    {item.created_at
+                        ? `${new Date(item.created_at).toLocaleDateString()} ${new Date(item.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`
+                        : ""}
+                </Text>
                 <Text style={tableStyles.cell}>{item.status}</Text>
         </TouchableOpacity>
     )
@@ -122,14 +126,16 @@ export default function Orders() {
                 />
             </View>
 
-            <Modal visible={modalVisible} onRequestClose={() => setModalVisible(false)}>
+            <Modal visible={modalVisible} animationType="slide" onRequestClose={() => setModalVisible(false)}>
                 <View style={styles.modalContainer}>
-                    <TouchableOpacity onPress={() => {
+                    <TouchableOpacity
+                    style={{ alignSelf: "flex-end" }}
+                    onPress={() => {
                         setModalVisible(false);
                     }}>
-                        <Text>Fechar</Text>
+                        <MaterialIcons name="close" size={25} />
                     </TouchableOpacity>
-                    <ScrollView style={styles.modalContent}>
+                    <ScrollView style={styles.modalContent} showsVerticalScrollIndicator={false}>
                         <View style={{ gap: 10 }}>
                             <View style={styles.userInfo}>
                                 <Image source={{ uri: currentOrder?.owner_avatar }} style={styles.userProfilePhoto} />
