@@ -20,6 +20,7 @@ export default function Profile() {
                 setUser(currentUser);
             } else {
                 Alert.alert('Erro', 'Não foi possível carregar os dados do usuário.');
+                logout();
             }
         };
 

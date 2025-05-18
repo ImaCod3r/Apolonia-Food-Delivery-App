@@ -35,8 +35,6 @@ export class CartsController {
             if (error && error.code !== 'PGRST116') { // Ignore "row not found" error
                 throw error;
             }
-
-            console.log(data);
             
             let items = data ? JSON.parse(data.items) : [];
             const existingItemIndex = items.findIndex((item: any) => item.product_id === product.id);
@@ -55,7 +53,6 @@ export class CartsController {
                 throw updateError;
             }
         } catch (error) {
-            console.error("Error adding item to cart:", error);
             throw error;
         }
     }

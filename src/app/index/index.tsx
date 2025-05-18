@@ -1,14 +1,13 @@
 import { View, Image, TouchableOpacity, Alert, Text, SafeAreaView } from "react-native";
 import { useState, useEffect } from "react";
-import { styles } from "./styles";
+import styles from "./styles";
 
 import { CartButton } from "@/components/cartButton";
-import { SearchBar } from "@/components/searchBar";
 
 import { Menu } from "@/components/menu";
 import { router } from "expo-router";
 
-import { getcurrentUser } from "@/utils/auth";
+import { getcurrentUser, logout } from "@/utils/auth";
 import { ProductsController } from "@/controllers/productsController";
 import { PushTokensController } from "@/controllers/pushTokensController";
 
@@ -26,6 +25,7 @@ export default function Index() {
             setCurrentUser(currentUser);
         } else {
             Alert.alert('Erro', 'Não foi possível carregar os dados do usuário.');
+            logout();
         }
     };
 
@@ -80,8 +80,6 @@ export default function Index() {
                     </View>
 
                 </View>
-
-                <SearchBar icon="search" />
 
                 <Menu data={products} />
             </View>

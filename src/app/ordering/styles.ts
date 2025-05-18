@@ -17,6 +17,16 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: "#ccc",
     },
+    screenHeader: {
+        position: "absolute",
+        top: 10,
+        left: 10,
+        zIndex: 10,
+        backgroundColor: "#fff",
+        borderRadius: 50,
+        alignItems: "center",
+        justifyContent: "center"
+    },
     header: {
         flexDirection: "row",
         alignItems: "center",
@@ -37,24 +47,26 @@ const styles = StyleSheet.create({
         color: COLORS.black,
         marginBottom: 8,
     },
-    openModalButton: {
-        backgroundColor: COLORS.primary,
-        padding: 10,
-        borderRadius: 15,
-        position: "absolute",
-        top: 16,
-        right: 16,
-        zIndex: 9
-    },
     select: {
         backgroundColor: COLORS.gray,
         borderRadius: 10
     },
-    openModalButtonText: {
-        color: "#fff",
-        fontSize: 10,
-        textAlign: "center",
+    openModalButton: {
+        backgroundColor: COLORS.white,
+        borderRadius: 50,
+        padding: 10
     },
+    closeModal: {
+        alignSelf: "flex-end"
+    },
+    screenFooter:{
+        alignItems: "center",
+        position: "absolute",
+        bottom: 10,
+        width: "100%",
+        zIndex: 9
+    }
+
 })
 
 export default styles;

@@ -26,7 +26,6 @@ export function CardItem({ item, ...rest }: Props) {
                 Alert.alert('Erro', 'Não foi possível carregar os dados do usuário.');
             }
         }).catch((error) => {
-            console.error("Error fetching current user:", error);
             Alert.alert('Erro', 'Não foi possível carregar os dados do usuário.');
         });
     }, []);
@@ -35,7 +34,9 @@ export function CardItem({ item, ...rest }: Props) {
         CartsController.addItemToCart(userId, product).then(() => {
             Alert.alert('Sucesso', 'Produto adicionado ao carrinho com sucesso!');
             setCartItemsQuantity(cartItemsQuantity + 1); // Update the cart quantity
-        });
+        }).catch(error => {
+            Alert.alert("Erro", "Não foi possivel adicionar item ao carrinho, tente novamente!")
+        })
     };
 
     return (

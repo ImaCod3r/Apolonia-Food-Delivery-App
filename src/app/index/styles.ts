@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 import { COLORS } from "@/styles/colors";
 
-export const styles = StyleSheet.create({
+const styles = StyleSheet.create({
     container: {
         paddingBottom: 5,
         flex: 1,
@@ -34,3 +34,5 @@ export const styles = StyleSheet.create({
         borderRadius: 50
     }
 })
+
+export default styles;

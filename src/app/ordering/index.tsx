@@ -18,6 +18,7 @@ import {
 import { OrdersController } from "@/controllers/ordersController";
 import { getcurrentUser } from "@/utils/auth";
 import { Back } from "@/components/back";
+import { MaterialIcons } from "@expo/vector-icons";
 
 export default function Ordering() {
     const params = useLocalSearchParams();
@@ -121,17 +122,27 @@ export default function Ordering() {
 
     return (
         <View style={styles.container}>
-           <View style={{ position: "absolute", top: 10, left: 10, zIndex: 10, backgroundColor: "#fff", borderRadius: 50 }}>
+            <View style={styles.screenHeader}>
                 <Back />
-           </View>
+            </View>
+
+
+            <View style={styles.screenFooter}>
+                <TouchableOpacity style={styles.openModalButton} onPress={() => setModalVisible(true)}>
+                    <MaterialIcons name="keyboard-arrow-up" size={25} />
+                </TouchableOpacity>
+            </View>
 
             <Modal
                 animationType="slide"
                 transparent={true}
                 visible={modalVisible}
-                onRequestClose={() => setModalVisible(false)}
-            >
+                onRequestClose={() => setModalVisible(false)} >
                 <View style={styles.modalContainer}>
+                    <TouchableOpacity style={styles.closeModal} onPress={() => setModalVisible(false)}>
+                        <MaterialIcons name="close" size={25} />
+                    </TouchableOpacity>
+
                     <View style={styles.header}>
                         <Text style={styles.title}>Informações de entrega</Text>
                     </View>
@@ -142,8 +153,7 @@ export default function Ordering() {
                     <TouchableOpacity
                         activeOpacity={1}
                         onPress={() => Keyboard.dismiss()}
-                        style={{ flex: 1 }}
-                    >
+                        style={{ flex: 1 }} >
                         <View style={styles.inputContainer}>
                             <Text style={styles.label}>Informe seu contacto</Text>
                             <Input
