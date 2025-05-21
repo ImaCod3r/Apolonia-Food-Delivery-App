@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
 import { CartsController } from "@/controllers/cartsController";
-import { getUserId } from "@/utils/auth";
+import { getUserId, logout } from "@/utils/auth";
 
 type CartContextType = {
     cartItemsQuantity: number;
@@ -22,7 +22,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
                 setCartItemsQuantity(totalQuantity);
             }
         } catch (error) {
-            console.error("Erro ao atualizar a quantidade de itens do carrinho:", error);
+            logout();
         }
     };
 

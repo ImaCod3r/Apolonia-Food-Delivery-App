@@ -9,11 +9,6 @@ import { router } from "expo-router";
 
 import { getcurrentUser, logout } from "@/utils/auth";
 import { ProductsController } from "@/controllers/productsController";
-import { PushTokensController } from "@/controllers/pushTokensController";
-
-import { setNotificationsHandler, registerForPushNotifications } from "@/utils/notifications";
-
-setNotificationsHandler();
 
 export default function Index() {
     const [currentUser, setCurrentUser] = useState<{ id: string, name: string; email: string, avatar_url: string, isadmin: boolean } | null>(null);
@@ -38,23 +33,9 @@ export default function Index() {
         }
     }
 
-    const handlePushTokenSaving = async () => {
-        try {
-            const token = await registerForPushNotifications();
-            if (token) {
-                await PushTokensController.savePushToken(currentUser?.id as string, token);
-            }
-        } catch (error) {
-            // console.error(error);
-            // Alert.alert("Erro", "Não foi possível salvar o push token.")
-        }
-    }
-
     useEffect(() => {
         // Load user data when the component mounts
-        loadUser().then(() => {
-            handlePushTokenSaving();
-        })
+        loadUser();
         // Load products data when the component mounts
         getProducts();
     }, []);

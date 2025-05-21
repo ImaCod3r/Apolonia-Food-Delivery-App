@@ -1,7 +1,7 @@
 import { View, TouchableOpacity, TouchableOpacityProps, Text, Image, Alert } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 
-import { styles } from './styles';
+import styles from './styles';
 import { COLORS } from '@/styles/colors';
 
 import { getcurrentUser } from '@/utils/auth';

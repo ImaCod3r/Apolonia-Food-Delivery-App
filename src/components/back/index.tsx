@@ -2,7 +2,7 @@ import { TouchableOpacity, TouchableOpacityProps } from "react-native";
 import { router } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
 
-import { styles } from "./styles";
+import styles from "./styles";
 import { COLORS } from "@/styles/colors";
 
 export function Back({ ...rest }: TouchableOpacityProps) {

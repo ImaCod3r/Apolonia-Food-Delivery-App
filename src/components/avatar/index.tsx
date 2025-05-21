@@ -1,7 +1,7 @@
 import { View, Image, TouchableOpacity, Modal, Text } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useState, useEffect } from "react";
-import { styles } from "./styles";
+import styles from "./styles";
 
 import { uploadImage, deleteImage, getImageUrl, getDefaultImageUrl } from "@/utils/storage";
 import { UsersController } from "@/controllers/usersController";

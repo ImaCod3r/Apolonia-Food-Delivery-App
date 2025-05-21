@@ -126,7 +126,6 @@ export default function Ordering() {
                 <Back />
             </View>
 
-
             <View style={styles.screenFooter}>
                 <TouchableOpacity style={styles.openModalButton} onPress={() => setModalVisible(true)}>
                     <MaterialIcons name="keyboard-arrow-up" size={25} />

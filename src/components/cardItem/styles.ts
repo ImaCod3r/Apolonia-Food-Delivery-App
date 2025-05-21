@@ -5,7 +5,7 @@ import { COLORS } from "@/styles/colors";
 
 const { width } = Dimensions.get('window');
 
-export const styles = StyleSheet.create({
+const styles = StyleSheet.create({
     container: {
         flex: 1,
         maxWidth: width / 2 - 20, // Adjusting for margin and gap
@@ -35,3 +35,5 @@ export const styles = StyleSheet.create({
         alignItems: 'center'
     }
 })
+
+export default styles;

@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity } from "react-native";
 import { router } from "expo-router";
 import { MaterialIcons } from "@expo/vector-icons";
 import { COLORS } from "@/styles/colors";
-import { styles } from "./styles";
+import styles from "./styles";
 import { useCart } from "@/contexts/CartContext";
 
 export function CartButton() {
